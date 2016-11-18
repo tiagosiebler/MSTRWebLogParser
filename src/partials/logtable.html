@@ -1,0 +1,28 @@
+<div class="panel panel-default">
+	<!-- Default panel contents -->	
+	<div class="panel-heading clearfix">
+		<b>Web Logs ({{data.length}} available) ({{total}}{{isFiltered}})</b>	
+		<div class="btn-group pull-right">
+			<a ng-click="showFilter = !showFilter" class="btn btn-default btn-xs" aria-pressed="false" autocomplete="off"><span class="glyphicon glyphicon-filter"></span></a>
+			<a ng-click="tableParams.reload()" class="btn btn-default btn-xs" aria-pressed="false" autocomplete="off"><span class="glyphicon glyphicon-refresh"></span></a>
+		</div>
+	</div>
+	<div class="panel-body">
+		<div class="table-responsive table-striped table-hover table-condensed">
+			<table ng-table="tableParams" class="table table-striped table-condensed table-hover" show-filter="showFilter" ng-init="getOrders()">
+			    <tr ng-repeat="log in $data track by log.id+log.miliseconds" ng-class="{info: log.level== 'MESSAGE', warning: log.level== 'SEVERE'}">
+			        <td title="'Package'" filter="{ package: 'text'}" sortable="'package'">{{log.package}}</td>
+			        <td title="'level'" filter="{ level: 'text'}" sortable="'level'">{{log.level}}</td>
+			        <td title="'miliseconds'" filter="{ miliseconds: 'text'}" sortable="'miliseconds'">{{log.miliseconds}}</td>
+			        <td title="'timestamp'" filter="{ timestamp: 'text'}" sortable="'timestamp'">{{log.timestamp}}</td>
+			        <td title="'thread'" filter="{ thread: 'text'}" sortable="'thread'">{{log.thread}}</td>
+			        <td title="'class'" filter="{ class: 'text'}" sortable="'class'">{{log.class}}</td>
+			        <td title="'method'" filter="{ method: 'text'}" sortable="'method'">{{log.method}}</td>
+			        <td title="'message'" filter="{ message: 'text'}" sortable="'message'">{{log.message}}</td>
+			        <td title="'exception'" filter="{ exception: 'text'}" sortable="'exception'">{{ log.exception | limitTo: 50 }}{{log.exception.length > 20 ? '...' : ''}}</td>
+			        <td><a href="" ng-click="openOrder(order.id)"><span class="glyphicon glyphicon-eye-open"></span></a></td>					
+			     </tr>
+			</table>
+		</div>
+	</div>
+</div>
