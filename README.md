@@ -8,7 +8,7 @@ This specific project is built with:
 
 # Live Demo
 A live demo of this website can be seen here:
-https://tiagosiebler.github.io/MSTRWebLogParser/build/index.html
+https://tiagosiebler.github.io/MSTRWebLogParser/build/
 
 This demo is a live implementation of the latest code in this repository.
 
