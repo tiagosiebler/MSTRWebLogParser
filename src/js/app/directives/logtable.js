@@ -51,6 +51,35 @@
 				testRow();
 				//*/
 				console.log("using data: ",$rootScope.data);
+			    var self = $scope;
+				
+				self.debug = function(param){
+					debugger;
+				}
+			    $scope.columns = [
+					{ field: "Package", 	title: "Package", 		show: true },
+					{ field: "Level", 		title: "Level", 		show: true },
+					{ field: "Milliseconds", title: "Milliseconds",	show: true },
+					{ field: "TimeStamp", 	title: "TimeStamp", 	show: true },
+					{ field: "Thread", 		title: "Thread", 		show: true },
+					{ field: "Class", 		title: "Class", 		show: true },
+					{ field: "Method", 		title: "Method", 		show: true },
+					{ field: "Exception", 	title: "Exception", 	show: true },
+					{ field: "Others", 		title: "Others", 		show: true },
+			    ];
+
+			    $scope.del = function(row) {
+					_.remove(self.tableParams.settings().dataset, function(item) {
+						return row === item;
+					});
+
+					self.tableParams.reload().then(function(data) {
+						if (data.length === 0 && self.tableParams.total() > 0) {
+							self.tableParams.page(self.tableParams.page() - 1);
+							self.tableParams.reload();
+						}
+					});
+				}
 
 			    $scope.tableParams = new NgTableParams({
 			        page: $scope.pagination.currentPage,            // show first page

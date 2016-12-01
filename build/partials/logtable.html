@@ -1,1 +1,24 @@
-<div class="panel panel-default"><!-- Default panel contents --><div class="panel-heading clearfix"><b>Web Logs ({{data.length}} available) ({{total}}{{isFiltered}})</b><div class="btn-group pull-right"><a ng-click="showFilter = !showFilter" class="btn btn-default btn-xs" aria-pressed="false" autocomplete="off"><span class="glyphicon glyphicon-filter"></span></a> <a ng-click="tableParams.reload()" class="btn btn-default btn-xs" aria-pressed="false" autocomplete="off"><span class="glyphicon glyphicon-refresh"></span></a></div></div><div class="panel-body"><div class="table-responsive table-striped table-hover table-condensed"><table ng-table="tableParams" class="table table-striped table-condensed table-hover" show-filter="showFilter" ng-init="getOrders()"><tr ng-repeat="log in $data track by log.id+log.miliseconds" ng-class="{info: log.level== 'MESSAGE', warning: log.level== 'SEVERE'}"><td title="'Package'" filter="{ package: 'text'}" sortable="'package'">{{log.package}}</td><td title="'level'" filter="{ level: 'text'}" sortable="'level'">{{log.level}}</td><td title="'miliseconds'" filter="{ miliseconds: 'text'}" sortable="'miliseconds'">{{log.miliseconds}}</td><td title="'timestamp'" filter="{ timestamp: 'text'}" sortable="'timestamp'">{{log.timestamp}}</td><td title="'thread'" filter="{ thread: 'text'}" sortable="'thread'">{{log.thread}}</td><td title="'class'" filter="{ class: 'text'}" sortable="'class'">{{log.class}}</td><td title="'method'" filter="{ method: 'text'}" sortable="'method'">{{log.method}}</td><td title="'message'" filter="{ message: 'text'}" sortable="'message'">{{log.message}}</td><td title="'exception'" filter="{ exception: 'text'}" sortable="'exception'">{{ log.exception | limitTo: 50 }}{{log.exception.length > 20 ? '...' : ''}}</td><td><a href="" ng-click="openOrder(order.id)"><span class="glyphicon glyphicon-eye-open"></span></a></td></tr></table></div></div></div>
+<div class="panel panel-default"><!-- Default panel contents --><div class="panel-heading clearfix"><b>Web Logs ({{data.length}} available) ({{total}}{{isFiltered}})</b><div class="btn-group pull-right"><button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter"><span class="glyphicon glyphicon-filter"></span> Search</button><!--
+			<a ng-click="showFilter = !showFilter" class="btn btn-default btn-xs" aria-pressed="false" autocomplete="off"><span class="glyphicon glyphicon-filter"></span> Search</a>
+			<a ng-click="tableParams.reload()" class="btn btn-default btn-xs" aria-pressed="false" autocomplete="off"><span class="glyphicon glyphicon-refresh"></span></a>
+		--></div></div><div class="panel-body"><!--
+		<div style="margin-bottom: 20px">
+			<label class="checkbox-inline" ng-repeat="col in columns">
+				<input type="checkbox" ng-model-options="{ getterSetter: true }" ng-model="col.show"/> {{col.title}}
+			</label>
+        </div>
+	--><div class="table-responsive table-striped table-hover table-condensed"><table ng-table="tableParams" class="table table-striped table-condensed table-hover logTable" show-filter="showFilter" ng-table-columns-binding="columns"><!--<tr>
+					<th>Package</th>
+					<th>Level</th>
+					<th>MS</th>
+					<th>TimeStamp</th>
+					<th>Thread</th>
+					<th>Class</th>
+					<th>Method</th>
+					<th>Message</th>
+					<th>Exception</th>
+					<th>Others</th>
+					<th></th>
+				</tr>
+			
+					--><tr ng-repeat="log in $data track by log.id+log.miliseconds" ng-class="{info: log.level== 'MESSAGE', warning: log.level== 'SEVERE'}"><td title="'Package'" filter="{ package: 'text'}" sortable="'package'" ng-if="true">{{log.package}}</td><td title="'Level'" filter="{ level: 'text'}" sortable="'level'" ng-if="true">{{log.level}}</td><td title="'Milliseconds'" filter="{ miliseconds: 'text'}" sortable="'miliseconds'" ng-if="true">{{log.miliseconds}}</td><td title="'TimeStamp'" filter="{ timestamp: 'text'}" sortable="'timestamp'" ng-if="true">{{log.timestamp}}</td><td title="'Thread'" filter="{ thread: 'text'}" sortable="'thread'" ng-if="true">{{log.thread}}</td><td title="'Class'" filter="{ class: 'text'}" sortable="'class'" ng-if="true">{{log.class}}</td><td title="'Method'" filter="{ method: 'text'}" sortable="'method'" ng-if="true">{{log.method}}</td><td title="'Message'" filter="{ message: 'text'}" sortable="'message'" ng-if="true">{{log.message}}</td><td title="'Exception'" filter="{ exception: 'text'}" sortable="'exception'" ng-if="true">{{log.exception | limitTo: 50 }}{{log.exception.length > 20 ? '...' : ''}}</td><td title="'Others'" filter="{ others: 'text'}" sortable="'others'" ng-if="true">{{log.others}}</td><td><button class="btn btn-default btn-sm" ng-click="view(log)"><span class="glyphicon glyphicon-eye-open"></span></button> <button class="btn btn-danger btn-sm" ng-click="del(log)"><span class="glyphicon glyphicon-trash"></span></button></td></tr></table></div></div></div>

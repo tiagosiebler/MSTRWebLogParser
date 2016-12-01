@@ -116,6 +116,8 @@ html, body {
   height: 100%
 }
 
+
+
 .textcontainer{
   //padding: 10px;
   border: 1px solid silver;
@@ -133,6 +135,10 @@ html, body {
   border: none;
   height: 100%;
   margin: -10px;
+}
+
+.logTable td:last-child {
+  min-width: 90px;
 }
 
 .drop-box {

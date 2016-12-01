@@ -15,7 +15,29 @@
 				};
 			},//*/
 			controller: ['$scope','$rootScope', function($scope, $rootScope) {
-			
+				$scope.concatExtraCols = function(row){
+					var template = { 
+					    'package' : 'Java package within which message was triggered', 
+					    'level' : 'Logging level',
+					    'miliseconds' : 'Message milliseconds',
+					    'timestamp' : 'Message timestamp',
+					    'thread' : 'Thread ID',
+					    'class' : 'Java class that triggered this message',
+					    'method' : 'Method in java class that triggered this message',
+					    'message' : 'Message',
+					    'exception' : 'Full exception, if available',
+						'others' : 'Used as a placeholder for abnormal extra xml tags and values'
+					};
+					if(!row.hasOwnProperty('others')) row.others = "";											
+					
+					for (var key in row) {
+						// check against list for known keys
+					    if (!template.hasOwnProperty(key) && row.hasOwnProperty(key) && typeof(row[key]) == 'string') {
+						    //console.log($rootScope.index + ": "+ key + " ( "+  typeof(row[key]) + ") -> " + row[key]);
+							row.others += "(" + key + ")->" + row[key] + "; \n";
+						}
+					}
+				};
 				$scope.uploadXmlFile = function(files){
 					if(!files) return;
 
@@ -39,39 +61,41 @@
 								
 								var json = x2js.xml_str2json(xml);
 								
-								console.log("length: ",json.xml.length);
+								//console.log("length: ",json.xml.length);
 								
 								if(json.xml.record.length){
-									console.log(json.xml.record.length + " rows");
+									console.log("Processing " + json.xml.record.length + " rows");
 									
-									for(var ii = 0;ii< json.xml.record.length;ii++){										
+									for(var ii = 0;ii< json.xml.record.length;ii++){
+										$scope.concatExtraCols(json.xml.record[ii]);
+																		
 										json.xml.record[ii].id = $rootScope.index;
+										
+										
+										//package, level, miliseconds, timestamp, thread, class, method, message, exception			
+
 										$rootScope.data.push(json.xml.record[ii]);
 										$rootScope.index++;
 										
 									}
 									
 								}else{
-									console.log("1 row");
+									console.log("Processing 1 row");
+									$scope.concatExtraCols(json.xml.record);
 									
 									json.xml.record.id = $rootScope.index;
 									$rootScope.data.push(json.xml.record)
 									$rootScope.index++;
 								}
 								
-							  	
-						  		console.log("loaded: ", $rootScope.data);
-								console.log("have this many results: ", $rootScope.data.length)
-								
+						  		console.log("Current dataset: ", $rootScope.data);
+								console.log("Contains this many log rows: ", $rootScope.data.length)
+								//debugger;
 								
 							};
-					
 							reader.readAsBinaryString(file);
 						}
-						
 					}
-					
-
 				};
 				
 				$scope.$watch('files', function () {
