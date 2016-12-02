@@ -137,8 +137,18 @@ html, body {
   margin: -10px;
 }
 
+
+.logTable {
+    //table-layout: fixed;
+    word-wrap: break-word;
+}
+.logTable td{
+	max-width: 500px;
+}
+
 .logTable td:last-child {
-  min-width: 90px;
+    min-width: 90px;
+    max-width: 90px;
 }
 
 .drop-box {

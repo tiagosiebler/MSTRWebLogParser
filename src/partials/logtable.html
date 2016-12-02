@@ -18,8 +18,8 @@
 			</label>
         </div>
 	-->
-		<div class="table-responsive table-striped table-hover table-condensed">
-			<table ng-table="tableParams" class="table table-striped table-condensed table-hover logTable" show-filter="showFilter" ng-table-columns-binding="columns">
+		<div class="table table-responsive">
+			<table ng-table="tableParams" class="table table-striped table-hover table-condensed logTable logTable" show-filter="showFilter" ng-table-columns-binding="columns">
 				
 				<!--<tr>
 					<th>Package</th>
@@ -34,7 +34,7 @@
 					<th>Others</th>
 					<th></th>
 				</tr>
-			
+			log.exception.textLength
 					-->
 				<tr ng-repeat="log in $data track by log.id+log.miliseconds" ng-class="{info: log.level== 'MESSAGE', warning: log.level== 'SEVERE'}">
 					<td title="'Package'" 		filter="{ package: 'text'}" 	sortable="'package'" 	ng-if="true">{{log.package}}</td>
@@ -46,7 +46,13 @@
 					<td title="'Class'" 		filter="{ class: 'text'}" 		sortable="'class'"		ng-if="true">{{log.class}}</td>
 					<td title="'Method'" 		filter="{ method: 'text'}" 		sortable="'method'"		ng-if="true">{{log.method}}</td>
 					<td title="'Message'" 		filter="{ message: 'text'}" 	sortable="'message'"	ng-if="true">{{log.message}}</td>
-					<td title="'Exception'" 	filter="{ exception: 'text'}" 	sortable="'exception'"	ng-if="true">{{log.exception | limitTo: 50 }}{{log.exception.length > 20 ? '...' : ''}}</td>
+
+					<td title="'Exception'" 	filter="{ exception: 'text'}" 	sortable="'exception'"	ng-if="true" ng-init="log.limit.exception=250" ng-click="alert(log.limit.exception = log.exception)">
+						{{log.exception | limitTo: log.limit.exception }}{{log.exception.length > 20 ? '' : ''}}
+						<a ng-click="log.limit.exception = log.exception.length" ng-show="log.exception.length > log.limit.exception" title="{{log.exception}}"><strong>&gt;&gt;&gt;</strong></a>
+						<a ng-click="log.limit.exception = 250" ng-show="log.exception.length == log.limit.exception" title="{{log.exception}}"><strong>&lt;&lt;&lt;</strong></a>
+					
+					</td>
 					<td title="'Others'" 		filter="{ others: 'text'}" 		sortable="'others'"		ng-if="true">{{log.others}}</td>
 					
 		            <td>

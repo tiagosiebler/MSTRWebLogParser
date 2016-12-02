@@ -223,8 +223,15 @@ html, body {
   height: 100%;
   margin: -10px; }
 
+.logTable {
+  word-wrap: break-word; }
+
+.logTable td {
+  max-width: 500px; }
+
 .logTable td:last-child {
-  min-width: 90px; }
+  min-width: 90px;
+  max-width: 90px; }
 
 .drop-box {
   background: #F8F8F8;

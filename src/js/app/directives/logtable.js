@@ -56,6 +56,8 @@
 				self.debug = function(param){
 					debugger;
 				}
+				
+				//esvit/ng-table/issues/189
 			    $scope.columns = [
 					{ field: "Package", 	title: "Package", 		show: true },
 					{ field: "Level", 		title: "Level", 		show: true },
