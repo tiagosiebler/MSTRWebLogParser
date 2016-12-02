@@ -15,7 +15,8 @@
 				};
 			},//*/
 			controller: ['$scope','$rootScope', function($scope, $rootScope) {
-				$scope.concatExtraCols = function(row){
+				$scope.concatExtraCols = function(row){					
+					
 					var template = { 
 					    'package' : 'Java package within which message was triggered', 
 					    'level' : 'Logging level',
@@ -52,6 +53,7 @@
 			                var file = files[i];
 							
 							reader = new FileReader();
+							
 							reader.onloadend = function(e){
 								//debugger;
 								$scope.log = "Loaded " + i + "/" + files.length + " files.";
@@ -93,7 +95,7 @@
 								//debugger;
 								
 							};
-							reader.readAsBinaryString(file);
+							reader.readAsText(file, 'UTF-8');
 						}
 					}
 				};

@@ -7,7 +7,7 @@
 	        ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true"
 	        accept=".log" 
 	        ngf-pattern="'.log'"
-	ng-model="files" class="drop-box" aaaaaonclick="document.getElementById('importFile').click()">Drop .log files here / click to upload <br /><br />Note: only .log files are accepted</div>
+	ng-model="files" class="drop-box" aaaaaonclick="document.getElementById('importFile').click()">Drop .log file here / click to upload <br /><br />Note: only .log files are accepted</div>
     <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
     <ul>
            <li ng-repeat="f in files" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}</li>
