@@ -25,7 +25,7 @@
 				
 				$scope.pagination = {};
 				$scope.pagination.currentPage = 1;
-				$scope.pagination.perPage = 40;
+				$scope.pagination.perPage = 50;
 
 				/*
 				function testRow(){
@@ -105,8 +105,11 @@
 					filterOptions: {
 						filterDelay: 200
 					},
-					dataset: $rootScope.data
+					dataset: $rootScope.data,
+					counts: [10, 25, 50, 100, 500],//1000 is SLOW
+					
 				});
+				//debugger;
 				
 				$rootScope.$watch('data', function () {
 					//debugger;

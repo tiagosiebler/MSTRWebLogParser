@@ -137,19 +137,39 @@ html, body {
   margin: -10px;
 }
 
-
-.logTable {
+.table{
     //table-layout: fixed;
     word-wrap: break-word;
+    width: 100%;
 }
+.logTable {
+    //word-wrap: break-word;
+	//display: inline-block;
+}
+/*
 .logTable td{
-	max-width: 500px;
-}
+	width: 30%;
+}//*/
 
 .logTable td:last-child {
     min-width: 90px;
     max-width: 90px;
+	text-align: right;
 }
+
+.logTable td{
+    max-width: 200px;
+}
+.logTable td:nth-child(1){
+    width: 100%;
+}
+.logTable td:nth-child(8),.logTable td:nth-child(9){
+    max-width: 300px;
+}
+
+.logTable td:nth-child(10){
+    max-width: 150px;
+}//*/
 
 .drop-box {
     background: #F8F8F8;
