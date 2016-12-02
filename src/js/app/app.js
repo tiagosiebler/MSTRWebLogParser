@@ -8,7 +8,7 @@
 		$rootScope.startField = "test";		
 		
 		$rootScope.getLocation = function(){
-			return 'title'
+			return 'MSTR Web Log Parser'
 		}
 		$rootScope.doReset = function () {
 	        $rootScope.data = new Array();
