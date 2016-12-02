@@ -82,6 +82,21 @@
 						}
 					});
 				}
+				$scope.alert = function(param){
+					//alert(param);
+					var html = document.createElement('html');
+					var body = document.createElement('body');
+					var pre = document.createElement('pre');
+					
+					html.appendChild(body);
+					body.appendChild(pre);
+					pre.appendChild(document.createTextNode(param));
+					
+					var x=window.open('','_blank', 'toolbar=0,location=0,menubar=0,height=500,width=1400');
+						x.document.open();
+						x.document.write(html.innerHTML);
+						x.document.close();
+				}
 
 			    $scope.tableParams = new NgTableParams({
 			        page: $scope.pagination.currentPage,            // show first page
