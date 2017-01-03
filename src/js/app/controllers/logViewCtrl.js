@@ -34,7 +34,7 @@ angular.module('logViewCtrl', [])//'confirm'
             //37 = left key
             //39 = right key
             if (event.keyCode === EnumKeys.left) {
-                if($scope.log.id != ($rootScope.data.length - 1)){
+                if($scope.log.id != ($rootScope.data.length - 1)){//array notation, last element is actually 1 before total element count
                    // debugger;
                     console.log("moved left: ",$scope.log);
                     $scope.navigateTo("previous");
@@ -45,7 +45,7 @@ angular.module('logViewCtrl', [])//'confirm'
             if (event.keyCode === EnumKeys.right) {
                 //delete($scope.log);
                 //$scope.log = $rootScope.data[(log.id+1)];
-                if($scope.log.id != 1){
+                if($scope.log.id != 0){
                     console.log("moved right: ",$scope.log);
                     $scope.navigateTo("next");
                 }else{

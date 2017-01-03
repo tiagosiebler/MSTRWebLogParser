@@ -51,13 +51,41 @@
 				}
 				testRow();
 				//*/
-				console.log("using data: ",$rootScope.data);
+				//console.log("using data: ",$rootScope.data);
 			    var self = $scope;
 				
 				self.debug = function(param){
 					debugger;
 				}
 				
+                $scope.dragging = false;
+				$scope.mouseIsDown = false;
+                $scope.mouseDown = function(event){
+                    //console.log("mouse down");
+                    $scope.mouseIsDown = true;
+                    $scope.dragging = false;
+                };
+                $scope.mouseUp = function(log){
+                    //console.log("mouse up");
+                    $scope.mouseIsDown = false;
+                    
+                    if($scope.dragging){
+                        //console.log("Must have dragged");
+                        return false;
+                    }else{
+                        $scope.view(log);
+                    }
+                };
+                $scope.mouseMove = function(event){
+                    //console.log("mouse moved");
+                    $scope.dragging = true;
+                };
+                $scope.dblClick = function($event){
+                    console.log("double click");
+                    //$event.preventDefault();
+                    //$event.stopPropagation();
+                };
+                
 				//esvit/ng-table/issues/189
 			    $scope.columns = [
 					{ field: "Package", 	title: "Package", 		show: true },
@@ -118,12 +146,13 @@
                     modalInstance.result.then(function (result) {
                         var nextID;
                         if(result.action == "next"){
+                           // debugger;
                             nextID = result.data - 1;//since rows are in reverse order, top row is first row
                             
                         }else if(result.action == "previous"){
                             nextID = result.data + 1;
                         }
-
+                        //todo this doesn't work when sort order is changed
                         $scope.view($rootScope.data[nextID]);
                     }, function () {
 						console.log('Modal dismissed at: ' + new Date());
@@ -140,10 +169,11 @@
 			        page: $scope.pagination.currentPage,            // show first page
 			        count: $scope.pagination.perPage,           // count per page
 			        sorting: { 
+                        id: 'desc',
 			            package: '',
 						level: '',
 						miliseconds: '',
-						timestamp: 'desc',
+						timestamp: '',
 						thread: '',
 						class: '',
 						method: '',
