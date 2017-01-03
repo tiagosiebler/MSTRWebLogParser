@@ -1,221 +1,3 @@
-/* Styling for the ngProgress itself */
-#ngProgress {
-  margin: 0;
-  padding: 0;
-  z-index: 99998;
-  background-color: red !important;
-  color: red !important;
-  box-shadow: 0 0 10px 0;
-  /* Inherits the font color */
-  height: 2px;
-  opacity: 0;
-  /* Add CSS3 styles for transition smoothing */
-  transition: all 0.5s ease-in-out; }
-
-/* Styling for the ngProgress-container */
-#ngProgress-container {
-  position: fixed;
-  margin: 0;
-  padding: 0;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 99999; }
-
-/* flip animations */
-.flipin.ng-hide-remove,
-.flipout.ng-hide-add.ng-hide-add-active {
-  opacity: 0;
-  animation: 0.5s flipOutX ease;
-  display: block !important; }
-
-.flipout.ng-hide-add,
-.flipin.ng-hide-remove.ng-hide-remove-active {
-  opacity: 1;
-  animation: 0.5s flipInX ease;
-  display: block !important; }
-
-.bouncein.ng-hide-remove,
-.bounceout.ng-hide-add.ng-hide-add-active {
-  opacity: 0;
-  animation: 1.5s hinge ease;
-  display: block !important; }
-
-.bounceout.ng-hide-add,
-.bouncein.ng-hide-remove.ng-hide-remove-active {
-  opacity: 1;
-  animation: 0.5s fadeInDown ease;
-  display: block !important; }
-
-/* general page styling */
-.general-header {
-  padding: 6px 12px;
-  border-bottom: 1px solid #eee; }
-
-/* json viewer */
-.angular-json-explorer .hidden {
-  display: none; }
-
-.angular-json-explorer .prop {
-  font-weight: 700; }
-
-.angular-json-explorer .null {
-  color: red; }
-
-.angular-json-explorer .bool, .angular-json-explorer .num {
-  color: #00f; }
-
-.angular-json-explorer .string {
-  color: green;
-  white-space: pre-wrap; }
-
-.angular-json-explorer .collapser {
-  position: absolute;
-  left: -1em;
-  cursor: pointer;
-  -moz-user-select: none;
-  color: #f92753;
-  text-decoration: none; }
-
-.angular-json-explorer .q {
-  display: inline-block;
-  width: 0;
-  color: transparent; }
-
-.angular-json-explorer li {
-  position: relative; }
-
-.angular-json-explorer .error {
-  -moz-border-radius: 8px;
-  border: 1px solid #970000;
-  background-color: #F7E8E8;
-  margin: .5em;
-  padding: .5em; }
-
-.angular-json-explorer .errormessage {
-  font-family: monospace; }
-
-.angular-json-explorer {
-  font-family: monospace;
-  font-size: 1.1em;
-  white-space: pre-wrap; }
-
-.angular-json-explorer ul {
-  list-style: none;
-  margin: 0 0 0 2em;
-  padding: 0; }
-
-.angular-json-explorer h1 {
-  font-size: 1.2em; }
-
-.angular-json-explorer .callback + #json {
-  padding-left: 1em; }
-
-.angular-json-explorer .callback {
-  font-family: monospace;
-  color: brown; }
-
-/* panel full screen options */
-.panel-actions {
-  margin-top: -20px;
-  margin-bottom: 0;
-  text-align: right; }
-
-.header-actions {
-  margin-top: -40px;
-  margin-bottom: 0;
-  text-align: right; }
-
-.panel-actions a {
-  color: #333; }
-
-.panel-fullscreen {
-  display: block;
-  z-index: 9999;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  overflow: auto;
-  margin-left: 0px; }
-
-html, body {
-  height: 100%; }
-
-.container-fluid,
-.row,
-.fill {
-  height: 100%; }
-
-#test {
-  display: table;
-  width: 100%;
-  height: 100%; }
-
-.fillRow {
-  display: table-row;
-  height: 100%; }
-
-.textcontainer {
-  border: 1px solid silver; }
-
-.textarea {
-  border: none; }
-
-.textcontainer .text {
-  resize: none;
-  outline: none;
-  width: 100%;
-  padding: 10px;
-  border: none;
-  height: 100%;
-  margin: -10px; }
-
-.table {
-  word-wrap: break-word;
-  width: 100%; }
-
-/*
-.logTable td{
-	width: 30%;
-}//*/
-.logTable td:last-child {
-  min-width: 90px;
-  max-width: 90px;
-  text-align: right; }
-
-.logTable td {
-  max-width: 200px; }
-
-.logTable td:nth-child(1) {
-  width: 100%; }
-
-.logTable td:nth-child(8), .logTable td:nth-child(9) {
-  max-width: 300px; }
-
-.logTable td:nth-child(10) {
-  max-width: 150px; }
-
-.drop-box {
-  background: #F8F8F8;
-  border: 5px dashed #DDD;
-  width: 100%;
-  text-align: center;
-  padding-top: 10%;
-  padding-bottom: 10%; }
-
-.dragover {
-  border: 5px dashed blue; }
-
-.app-modal-window .modal-dialog {
-  width: 95%; }
-
-.app-modal-window-max .modal-dialog.modal-lg {
-  width: 95%; }
-
 .chart-legend,
 .bar-legend,
 .line-legend,
@@ -447,3 +229,218 @@ button.toast-close-button {
 #toast-container > div.ng-leave.ng-leave-active,
 #toast-container > div.ng-enter {
   opacity: 0; }
+
+/* Styling for the ngProgress itself */
+#ngProgress {
+  margin: 0;
+  padding: 0;
+  z-index: 99998;
+  background-color: red !important;
+  color: red !important;
+  box-shadow: 0 0 10px 0;
+  /* Inherits the font color */
+  height: 2px;
+  opacity: 0;
+  /* Add CSS3 styles for transition smoothing */
+  transition: all 0.5s ease-in-out; }
+
+/* Styling for the ngProgress-container */
+#ngProgress-container {
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999; }
+
+/* flip animations */
+.flipin.ng-hide-remove,
+.flipout.ng-hide-add.ng-hide-add-active {
+  opacity: 0;
+  animation: 0.5s flipOutX ease;
+  display: block !important; }
+
+.flipout.ng-hide-add,
+.flipin.ng-hide-remove.ng-hide-remove-active {
+  opacity: 1;
+  animation: 0.5s flipInX ease;
+  display: block !important; }
+
+.bouncein.ng-hide-remove,
+.bounceout.ng-hide-add.ng-hide-add-active {
+  opacity: 0;
+  animation: 1.5s hinge ease;
+  display: block !important; }
+
+.bounceout.ng-hide-add,
+.bouncein.ng-hide-remove.ng-hide-remove-active {
+  opacity: 1;
+  animation: 0.5s fadeInDown ease;
+  display: block !important; }
+
+/* general page styling */
+.general-header {
+  padding: 6px 12px;
+  border-bottom: 1px solid #eee; }
+
+/* json viewer */
+.angular-json-explorer .hidden {
+  display: none; }
+
+.angular-json-explorer .prop {
+  font-weight: 700; }
+
+.angular-json-explorer .null {
+  color: red; }
+
+.angular-json-explorer .bool, .angular-json-explorer .num {
+  color: #00f; }
+
+.angular-json-explorer .string {
+  color: green;
+  white-space: pre-wrap; }
+
+.angular-json-explorer .collapser {
+  position: absolute;
+  left: -1em;
+  cursor: pointer;
+  -moz-user-select: none;
+  color: #f92753;
+  text-decoration: none; }
+
+.angular-json-explorer .q {
+  display: inline-block;
+  width: 0;
+  color: transparent; }
+
+.angular-json-explorer li {
+  position: relative; }
+
+.angular-json-explorer .error {
+  -moz-border-radius: 8px;
+  border: 1px solid #970000;
+  background-color: #F7E8E8;
+  margin: .5em;
+  padding: .5em; }
+
+.angular-json-explorer .errormessage {
+  font-family: monospace; }
+
+.angular-json-explorer {
+  font-family: monospace;
+  font-size: 1.1em;
+  white-space: pre-wrap; }
+
+.angular-json-explorer ul {
+  list-style: none;
+  margin: 0 0 0 2em;
+  padding: 0; }
+
+.angular-json-explorer h1 {
+  font-size: 1.2em; }
+
+.angular-json-explorer .callback + #json {
+  padding-left: 1em; }
+
+.angular-json-explorer .callback {
+  font-family: monospace;
+  color: brown; }
+
+/* panel full screen options */
+.panel-actions {
+  margin-top: -20px;
+  margin-bottom: 0;
+  text-align: right; }
+
+.header-actions {
+  margin-top: -40px;
+  margin-bottom: 0;
+  text-align: right; }
+
+.panel-actions a {
+  color: #333; }
+
+.panel-fullscreen {
+  display: block;
+  z-index: 9999;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  overflow: auto;
+  margin-left: 0px; }
+
+html, body {
+  height: 100%; }
+
+.container-fluid,
+.row,
+.fill {
+  height: 100%; }
+
+#test {
+  display: table;
+  width: 100%;
+  height: 100%; }
+
+.fillRow {
+  display: table-row;
+  height: 100%; }
+
+.textcontainer {
+  border: 1px solid silver; }
+
+.textarea {
+  border: none; }
+
+.textcontainer .text {
+  resize: none;
+  outline: none;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  height: 100%;
+  margin: -10px; }
+
+.table {
+  word-wrap: break-word;
+  width: 100%; }
+
+/*
+.logTable td{
+	width: 30%;
+}//*/
+.logTable td:last-child {
+  min-width: 90px;
+  max-width: 90px;
+  text-align: right; }
+
+.logTable td {
+  max-width: 200px; }
+
+.logTable td:nth-child(8), .logTable td:nth-child(9) {
+  max-width: 300px; }
+
+.logTable td:nth-child(10) {
+  max-width: 150px; }
+
+.drop-box {
+  background: #F8F8F8;
+  border: 5px dashed #DDD;
+  width: 100%;
+  text-align: center;
+  padding-top: 10%;
+  padding-bottom: 10%; }
+
+.dragover {
+  border: 5px dashed blue; }
+
+.app-modal-window .modal-dialog {
+  width: 95%; }
+
+.app-modal-window-max .modal-dialog.modal-lg {
+  width: 95%; }

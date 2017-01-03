@@ -161,7 +161,8 @@ html, body {
     max-width: 200px;
 }
 .logTable td:nth-child(1){
-    width: 100%;
+    //width: 100%;
+    //max-width: 150px;
 }
 .logTable td:nth-child(8),.logTable td:nth-child(9){
     max-width: 300px;
