@@ -50,9 +50,9 @@
             <label for="email_body"><h3>Stack Trace</h3></label>
             <span id="bodyHelpBlock" class="help-block">This is the full stack trace behind this log message. A stack trace provides a history of which methods were called, leading to the exception being triggered by the API. The top of the stack trace shows the last methods to be called before the exception was logged, and are often the most useful parts of the stack trace. 
                 <br /><br />
-                Note: This may not always be provided by the API.</span>
+                Note: This may not always be provided by the API. This is usually when the previous message triggered this message.</span>
 
-            <textarea type="text" class="form-control" name="email_body" id="email_body" ng-model="log.exception" ng-keydown="autoExpand($event)" ng-init="onShow()"  aria-describedby="bodyHelpBlock"></textarea>
+            <textarea type="text" class="form-control" name="email_body" id="email_body" ng-model="log.exception" ng-keydown="autoExpand($event)" ng-init="onShow()"  aria-describedby="bodyHelpBlock" readonly></textarea>
         </md-input-container>
     </div>
 </div>
