@@ -7,15 +7,31 @@
         return {
             restrict: 'E',
             templateUrl: 'partials/mainform.html',
-			/*
-			link: function (scope, element, attrs) {
-				scope.uploadButton = element[0].getElementsByClassName("uploadButton")[0];
-				scope.uploadButton.onchange = function(e) {
-					scope.uploadXmlFile(e);
-				};
-			},//*/
 			controller: ['$scope','$rootScope', function($scope, $rootScope) {
-				$scope.concatExtraCols = function(row){					
+				$scope.dragging = false;
+				$scope.mouseIsDown = false;
+                $scope.mouseDown = function(event){
+                    //console.log("mouse down");
+                    $scope.mouseIsDown = true;
+                    $scope.dragging = false;
+                };
+                $scope.mouseUp = function(log){
+                    //console.log("mouse up");
+                    $scope.mouseIsDown = false;
+                    
+                    if($scope.dragging){
+                        //console.log("Must have dragged");
+                        return false;
+                    }else{
+                        $scope.view(log);
+                    }
+                };
+                $scope.mouseMove = function(event){
+                    //console.log("mouse moved");
+                    $scope.dragging = true;
+                };
+                
+                $scope.concatExtraCols = function(row){					
 					
 					var template = { 
 					    'package' : 'Java package within which message was triggered', 
