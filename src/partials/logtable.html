@@ -36,11 +36,11 @@
 		log.exception.textLength
 				-->
 			<tr ng-repeat="log in $data track by log.id+log.miliseconds" ng-class="{info: log.level== 'MESSAGE', warning: log.level== 'SEVERE'}"
-                ng-mousedown="mouseDown(event)"
-                ng-mouseup  ="mouseUp(log)"
+                disabledng-mousedown="mouseDown(event)"
+                disabledng-mouseup  ="mouseUp(log)"
                 disabledsglclick="mouseUp(log)"
-                ng-mousemove="mouseMove(event)"
-                ng-dblClick="dblClick($event)"
+                disabledng-mousemove="mouseMove(event)"
+                ng-dblClick="view(log)"
                 >
 				
 				<td title="'Package'" 		filter="{ package: 'text'}" 	sortable="'package'" 	ng-if="true">{{log.package}}</td>
