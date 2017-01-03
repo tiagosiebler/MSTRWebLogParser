@@ -1,5 +1,5 @@
-(function() {
-    angular.module('logtable', ['ngTable'])
+(function () {
+    angular.module('logtable', ['ngTable','ui.bootstrap','logViewCtrl'])
 
     .directive('logtable', function() {
         return {
@@ -8,7 +8,7 @@
 			link: function (scope, element, attrs) {
 				
 			},
-			controller: ['$scope','$rootScope','NgTableParams', '$filter', '$timeout', function($scope, $rootScope, NgTableParams, $filter, $timeout) {	
+			controller: ['$scope','$rootScope','NgTableParams', '$filter', '$timeout','$uibModal', function($scope, $rootScope, NgTableParams, $filter, $timeout, $uibModal) {	
 				$scope.total = {};
 			    
 				$scope.filters = {
@@ -20,7 +20,8 @@
 					class: '',
 					method: '',
 					message: '',
-					exception: ''
+					exception: '',
+					others: ''
 	        	};
 				
 				$scope.pagination = {};
@@ -97,6 +98,43 @@
 						x.document.write(html.innerHTML);
 						x.document.close();
 				}
+                
+                // open modal to display full log in scrollable subview
+                $scope.view = function(log){
+                    // open a modal view of that log message
+                    var modalInstance = $uibModal.open({
+						animation: true,
+						templateUrl: 'partials/sub/logView.html',
+						controller: 'logViewCtrl',
+						size: 'lg',
+            			windowClass: 'app-modal-window',
+						resolve: {
+							log: function () {
+								return log;
+							}
+						}
+					});
+                    
+                    modalInstance.result.then(function (result) {
+                        var nextID;
+                        if(result.action == "next"){
+                            nextID = result.data - 1;//since rows are in reverse order, top row is first row
+                            
+                        }else if(result.action == "previous"){
+                            nextID = result.data + 1;
+                        }
+
+                        $scope.view($rootScope.data[nextID]);
+                    }, function () {
+						console.log('Modal dismissed at: ' + new Date());
+						}
+					);
+                }
+                
+                // open small modal with quick view of passed parameter
+                $scope.quickView = function(param){
+                    debugger;
+                }
 
 			    $scope.tableParams = new NgTableParams({
 			        page: $scope.pagination.currentPage,            // show first page

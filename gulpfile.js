@@ -40,6 +40,11 @@ var js_paths = {
         srcmap: node_modules + 'angular/angular.min.js.map',
         dest: "/angular"
 	},
+	angularuibootstrap: {
+        src: node_modules + 'angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
+       // srcmap: node_modules + 'angular-ui-bootstrap/dist/ui-bootstrap-tpls.js.map',
+        dest: "/angular-ui-bootstrap"
+	},
 	//angular-animate
 	nganimate: {
 		src: node_modules + 'angular-animate/angular-animate.min.js',
@@ -96,6 +101,11 @@ var js_paths = {
 };
 
 var css_paths = {
+	angular_bootstrap: {
+        src: node_modules + 'angular-ui-bootstrap/dist/ui-bootstrap-csp.css',
+       // srcmap: node_modules + 'angular-ui-bootstrap/dist/ui-bootstrap-tpls.js.map',
+        dest: "/angular-ui-bootstrap"
+	},
     bootstrap: {
         src: node_modules + 'bootstrap/dist/css/bootstrap.min.css',
         srcmap: node_modules + 'bootstrap/dist/css/bootstrap.min.css.map',
@@ -168,9 +178,16 @@ gulp.task('angular_bootstrap', function () {
         .pipe(gulp.dest(vendorPath + js_paths.angular_bootstrap.dest))
 		.pipe(gulp.dest(vendorPathDev + js_paths.angular_bootstrap.dest))
 });
+// angular_bootstrapcss
+gulp.task('angular_bootstrap_css', function () {
+    return gulp.src([
+		css_paths.angular_bootstrap.src])
+        .pipe(gulp.dest(vendorPath + css_paths.angular_bootstrap.dest))
+		.pipe(gulp.dest(vendorPathDev + css_paths.angular_bootstrap.dest))
+});
 
 
-gulp.task('bootstrap', ['bootstrap_js','bootstrap_css','bootstrap_fonts','angular_bootstrap']);
+gulp.task('bootstrap', ['bootstrap_js','bootstrap_css','bootstrap_fonts','angular_bootstrap','angular_bootstrap_css']);
 
 // nprogress, raw JS
 gulp.task('nprogress_js', function () {
@@ -214,7 +231,8 @@ gulp.task('js_dependencies_angular', function () {
 			js_paths.angular_chart_js.src,
 			js_paths.ngtable.src,
 			js_paths.ngfileupload.src,
-			js_paths.ngfileuploadshim.src
+			js_paths.ngfileuploadshim.src,
+			js_paths.angular_bootstrap.src
 		])
 
 		.pipe(ngAnnotate().on('error', function(e){

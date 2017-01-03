@@ -1,0 +1,58 @@
+<div class="modal-header">
+    <h3 class="modal-title">Inspecting Log Message {{log.id}} - {{log.class}}.{{log.method}}()
+	    <button type="button" class="close pull-right" aria-label="Close" ng-click="cancel()"><span aria-hidden="true">&times;</span></button>
+		</h3>
+</div>
+<div class="modal-body">
+    <h3>Trigger</h3>
+    <dl class="dl-horizontal">
+        <dt>Java Class:</dt>
+        <dd>{{log.package}}.{{log.class}}
+            <span class="help-block">Java class and package which triggered the exception.</span>
+        </dd>
+        
+
+        <dt>Method in Class:</dt>
+        <dd>{{log.method}}()
+            <span class="help-block">Method in above java class, which triggered the exception.</span>
+        </dd>
+
+        <dt>Level:</dt>
+        <dd>{{log.level}}
+            <span class="help-block">Severity of this message.</span>
+        </dd>
+        
+        <dt>Thread:</dt>
+        <dd>{{log.thread}}
+            <span class="help-block">Thread in which this exception occurred.</span>
+        </dd>
+        
+        <dt>Timestamp:</dt>
+        <dd>{{log.timestamp}} - {{log.miliseconds}}
+            <span class="help-block">The timestamp is a good method of finding similar messages in other related log files, such as the DSSErrors.log.</span>
+        </dd>
+    </dl>
+    
+    <h3>Exception</h3>
+    <dl class="dl-horizontal">
+        <dt>Message</dt>
+        <dd>{{log.message}}
+            <span class="help-block">Description provided by the API when the exception occurred, designed to help in identifying the cause of this exception on the API level.</span>
+        </dd>
+        
+        <dt ng-show="log.others">Other Messages</dt>
+        <dd ng-show="log.others">{{log.others}}
+            <span class="help-block">Other details provided by this log message.</span>
+        </dd>
+    </dl>
+    <div class="form-group">
+        <md-input-container flex>
+            <label for="email_body"><h3>Stack Trace</h3></label>
+            <span id="bodyHelpBlock" class="help-block">This is the full stack trace behind this log message. A stack trace provides a history of which methods were called, leading to the exception being triggered by the API. The top of the stack trace shows the last methods to be called before the exception was logged, and are often the most useful parts of the stack trace. 
+                <br /><br />
+                Note: This may not always be provided by the API.</span>
+
+            <textarea type="text" class="form-control" name="email_body" id="email_body" ng-model="log.exception" ng-keydown="autoExpand($event)" ng-init="onShow()"  aria-describedby="bodyHelpBlock"></textarea>
+        </md-input-container>
+    </div>
+</div>

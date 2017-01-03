@@ -185,3 +185,10 @@ html, body {
 .dragover {
     border: 5px dashed blue;
 }
+
+.app-modal-window .modal-dialog{
+	width: 95%;
+}
+.app-modal-window-max .modal-dialog.modal-lg{
+	width: 95%;
+}
