@@ -90,8 +90,8 @@
 									$rootScope.index++;
 								}
 								
-						  		console.log("Current dataset: ", $rootScope.data);
-								console.log("Contains this many log rows: ", $rootScope.data.length)
+						  		//console.log("Current dataset: ", $rootScope.data);
+								console.log("current dataset contains this many log rows: ", $rootScope.data.length)
 								//debugger;
 								
 							};
