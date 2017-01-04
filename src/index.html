@@ -46,13 +46,13 @@
 				<sidebar></sidebar>
 			</div>
 				-->
-			<div class="mainTableContainer" ng-hide="!data.length" class="flipin flipout">
+			<div class="mainTableContainer" ng-show="data.length" class="flipin flipout">
 				<logtable></logtable>
 			</div>
 			
-			<div class="col-md-12">
+			<div class="col-md-12" ng-hide="data.length" class="flipin flipout">
 				<!-- contents where we'll paste log, drag n drop, or select + upload -->
-				<mainform ng-hide="data.length" class="flipin flipout"></mainform>
+				<mainform></mainform>
 			</div>
 			
 			

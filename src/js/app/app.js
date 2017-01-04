@@ -6,13 +6,15 @@
         $rootScope.authenticated = true;
         $rootScope.authToken = "test";
 		$rootScope.startField = "test";		
-		
+        $rootScope.data = new Array();
+
 		$rootScope.getLocation = function(){
 			return 'MSTR Web Log Parser'
 		}
 		$rootScope.doReset = function () {
+            delete($rootScope.data);
 	        $rootScope.data = new Array();
-	    }		
+	    }
 	})
 	
 	.config(function ($httpProvider) {
