@@ -1,6 +1,6 @@
 {
   "author": "Tiago Siebler",
-  "name": "MSTRWebLogParser",
+  "name": "mstrweblogparser",
   "version": "1.0.0",
   "homepage": "https://github.com/tiagosiebler/MSTRWebLogParser",
   "repository": {
@@ -47,5 +47,8 @@
     "ngprogress": "^1.1.1",
     "nprogress": "^0.2.0",
     "xml2json-light": "^1.0.4"
+  },
+  "optionalDependencies": {
+    "fsevents": "*"
   }
 }
