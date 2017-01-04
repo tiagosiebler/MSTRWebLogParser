@@ -4,19 +4,9 @@
 		<b>Web Logs ({{data.length}} available) ({{total}}{{isFiltered}})</b>	
 		<div class="btn-group pull-right">
 			<button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter"><span class="glyphicon glyphicon-filter"></span> Search</button>	
-		<!--
-			<a ng-click="showFilter = !showFilter" class="btn btn-default btn-xs" aria-pressed="false" autocomplete="off"><span class="glyphicon glyphicon-filter"></span> Search</a>
-			<a ng-click="tableParams.reload()" class="btn btn-default btn-xs" aria-pressed="false" autocomplete="off"><span class="glyphicon glyphicon-refresh"></span></a>
-		-->
+			<!--<button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter"><span class="glyphicon glyphicon-plus"></span></button>-->
 		</div>
 	</div>
-    <!--
-		<div style="margin-bottom: 20px">
-			<label class="checkbox-inline" ng-repeat="col in columns">
-				<input type="checkbox" ng-model-options="{ getterSetter: true }" ng-model="col.show"/> {{col.title}}
-			</label>
-        </div>
-	-->
 	<div class="table table-responsive logTable">
 		<table ng-table="tableParams" class="table table-striped table-hover table-condensed logTable" show-filter="showFilter" ng-table-columns-binding="columns">
 			
@@ -57,9 +47,6 @@
 					<div class="colContents">
 						{{log.exception | limitTo: log.limit.exception }}{{log.exception.length > 20 ? '.....' : ''}}
 					</div>
-					<!--<a ng-click="log.limit.exception = log.exception.length" ng-show="log.exception.length > log.limit.exception" title="{{log.exception}}"><strong>&gt;&gt;&gt;</strong></a>
-					<a ng-click="log.limit.exception = 250" ng-show="log.exception.length == log.limit.exception" title="{{log.exception}}"><strong>&lt;&lt;&lt;</strong></a>-->
-				
 				</td>
 				<td title="'Others'" 		filter="{ others: 'text'}" 		sortable="'others'"		ng-if="true">{{log.others}}</td>
 				

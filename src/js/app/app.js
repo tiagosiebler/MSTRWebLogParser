@@ -2,7 +2,7 @@
     angular.module('myApp', ['mainform','logtable','ngAnimate'])
 	//add cookies back in ,'ngCookies'
 	
-	.run(function($http,$rootScope) {		
+	.run(function($http,$rootScope,$uibModal) {		
         $rootScope.authenticated = true;
         $rootScope.authToken = "test";
 		$rootScope.startField = "test";		
@@ -15,6 +15,15 @@
             delete($rootScope.data);
 	        $rootScope.data = new Array();
 	    }
+        $rootScope.viewHelp = function(){
+             var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'partials/sub/helpView.html',
+                //controller: 'logViewCtrl',
+                size: 'lg',
+                //windowClass: 'app-modal-window',
+            });
+        }
 	})
 	
 	.config(function ($httpProvider) {

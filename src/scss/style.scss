@@ -176,8 +176,9 @@ html, body {
 .logTable {
     text-align: left;
     //word-wrap: break-word;
-
-
+}
+.dl-horizontal dt{
+    //white-space: pre-wrap;
 }
 .mainTableContainer{
     //width: 100%;
