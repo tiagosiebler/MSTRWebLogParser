@@ -64,30 +64,24 @@
 				$scope.filesParsing = 0;
 				$scope.filesParsed = 0;
                 $scope.parseXMLLog = function(contentStr){
+                    //todo add logic here to determine the type of log (web/webxmlAPI/kernelAPI/DSSErrors.log)
+                    
+                    // web log files are xml but aren't wrapped in an XML tab.
                     var xml = "<xml>" + contentStr +"</xml>";
                     var x2js = new X2JS();
-
                     var json = x2js.xml_str2json(xml);
-
-                    //console.log("length: ",json.xml.length);
-
                     if(json.xml.record.length){
-                        //console.log("Processing " + json.xml.record.length + " rows");
+                        console.log("Processing " + json.xml.record.length + " rows");
 
                         for(var ii = 0;ii< json.xml.record.length;ii++){
                             $scope.concatExtraCols(json.xml.record[ii]);
 
                             json.xml.record[ii].id = $rootScope.index;
-
-
-                            //package, level, miliseconds, timestamp, thread, class, method, message, exception			
-
                             $rootScope.data.push(json.xml.record[ii]);
                             $rootScope.index++;
-
                         }
                     }else{
-                        //console.log("Processing 1 row");
+                        console.log("Processing 1 row");
                         $scope.concatExtraCols(json.xml.record);
 
                         json.xml.record.id = $rootScope.index;
@@ -101,7 +95,7 @@
 						$rootScope.parsing = false;
 					}
                     //console.log("Current dataset: ", $rootScope.data);
-                    //console.log("current dataset contains this many log rows: ", $rootScope.data.length)
+                    console.log("current dataset contains this many log rows: ", $rootScope.data.length)
                     //debugger;
                 }
 				$scope.uploadXmlFile = function(files){					
@@ -109,12 +103,18 @@
 
 					$rootScope.data = new Array();
 					$rootScope.index = 0;
-					$rootScope.progressBar.start();
+					
+					$scope.filesParsed = 0;
+					$scope.filesParsing = 0;
 					console.clear();
 					
 					$scope.filesParsing = files.length;
-                    $rootScope.parsing = true;
+					console.log("Upload XML file");
+					
 			        if (files && files.length) {
+						$rootScope.progressBar.start();
+                        $rootScope.parsing = true;
+
 						$scope.log = "Processing " + files.length + " files.";
 						
 			            for (var i = 0; i < files.length; i++) {
@@ -129,7 +129,11 @@
 							};
 							reader.readAsText(file, 'UTF-8');
 						}
+					}else{
+						console.log("no files registered: ",files);
 					}
+                    //delete(files);
+					//$scope.$apply();
 				};
 				
 				$scope.$watch('files', function () {

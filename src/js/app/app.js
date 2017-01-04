@@ -14,7 +14,7 @@
 			return 'MSTR Web Log Parser'
 		}
 		$rootScope.doReset = function () {
-            delete($rootScope.data);
+            //delete($rootScope.data);
 	        $rootScope.data = new Array();
 	    }
         $rootScope.viewHelp = function(){

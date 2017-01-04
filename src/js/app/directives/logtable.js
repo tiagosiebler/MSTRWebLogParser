@@ -164,6 +164,10 @@
                 $scope.quickView = function(param){
                     debugger;
                 }
+                $scope.isFiltered = function(){
+                    debugger;
+                    $scope.tableParams.filter();
+                }
 
 			    $scope.tableParams = new NgTableParams({
 			        page: $scope.pagination.currentPage,            // show first page
