@@ -12,7 +12,8 @@ https://tiagosiebler.github.io/MSTRWebLogParser/build/
 
 This demo is a live implementation of the latest code in this repository, the link can be bookmarked for easy access.
 
-# Basic Usage
+
+# Getting Involved
 ## Development 
 Installs dependencies and launches development instance in default browser. Any file-changes automatically update browser instance.
 
