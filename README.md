@@ -16,15 +16,15 @@ This demo is a live implementation of the latest code in this repository.
 ## Development 
 Installs dependencies and launches development instance in default browser. Any file-changes automatically update browser instance.
 
-1. Install gulp dependencies
+1. Install Ruby, if not yet installed
+
+	```
+	$ gem install sass
+	```
+2. Install gulp dependencies
 
 	```
 	$ npm install -d
-	```
-2. Install Ruby and gulp-sass-ruby
-
-	```
-	gem install sass
 	```
 3. Run with gulp
 
@@ -36,15 +36,15 @@ Installs dependencies and launches development instance in default browser. Any 
 ## Production Build
 The production build produces a zip file, or can be accessed directly via the build directory.
 
-1. Install gulp dependencies
+1. Install Ruby, if not yet installed
+
+	```
+	$ gem install sass
+	```
+2. Install gulp dependencies
 
 	```
 	$ npm install -d
-	```
-2. Install Ruby and gulp-sass-ruby
-
-	```
-	gem install sass
 	```
 3. Build with gulp
 
