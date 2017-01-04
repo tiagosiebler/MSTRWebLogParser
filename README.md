@@ -21,7 +21,12 @@ Installs dependencies and launches development instance in default browser. Any 
 	```
 	$ npm install -d
 	```
-2. Run with gulp
+2. Install Ruby and gulp-sass-ruby
+
+	```
+	gem install sass
+	```
+3. Run with gulp
 
 	```
 	$ gulp
@@ -36,7 +41,12 @@ The production build produces a zip file, or can be accessed directly via the bu
 	```
 	$ npm install -d
 	```
-2. Build with gulp
+2. Install Ruby and gulp-sass-ruby
+
+	```
+	gem install sass
+	```
+3. Build with gulp
 
 	```
 	$ gulp build
