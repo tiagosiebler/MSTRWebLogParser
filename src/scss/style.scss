@@ -105,6 +105,10 @@ html, body {
   height: 100%;
 }
 
+.mainContainer{
+  text-align: center;
+}
+
 #test {
   display: table;
   width: 100%;
@@ -142,10 +146,7 @@ html, body {
     word-wrap: break-word;
     width: 100%;
 }
-.logTable {
-    //word-wrap: break-word;
-	//display: inline-block;
-}
+
 /*
 .logTable td{
 	width: 30%;
@@ -172,6 +173,21 @@ html, body {
 .logTable td:nth-child(10){
     max-width: 150px;
 }//*/
+.logTable {
+    text-align: left;
+    //word-wrap: break-word;
+
+
+}
+.mainTableContainer{
+    //width: 100%;
+    overflow: scroll;
+    text-align: center;
+    margin: 0 auto;
+    display: inline-block;
+   //display: inline-block;
+
+}
 
 .drop-box {
     background: #F8F8F8;
@@ -190,6 +206,7 @@ html, body {
 
 .app-modal-window .modal-dialog{
 	width: 95%;
+    text-align: left !important;
 }
 .app-modal-window-max .modal-dialog.modal-lg{
 	width: 95%;

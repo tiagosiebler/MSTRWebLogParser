@@ -155,7 +155,7 @@
                         //todo this doesn't work when sort order is changed
                         $scope.view($rootScope.data[nextID]);
                     }, function () {
-						console.log('Modal dismissed at: ' + new Date());
+						//console.log('Modal dismissed at: ' + new Date());
 						}
 					);
                 }
