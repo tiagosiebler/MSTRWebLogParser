@@ -1,8 +1,8 @@
 <div class="panel panel-default">
 	<!-- Default panel contents -->	
 	<div class="panel-heading clearfix">
-		<b>Web Logs ({{data.length}} available) </b>
-		<b ng-if="tableParams.total() != data.length">(Filtered results: {{tableParams.total()}})</div></b>
+		<b>Web Logs - ({{data.length}} loaded) </b>
+		<b ng-show="tableParams.hasFilter()">- (Filtered results: {{tableParams.total()}})</div></b>
 		
 		<div class="btn-group pull-right">
 			<button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter"><span class="glyphicon glyphicon-filter"></span> Search</button>	
