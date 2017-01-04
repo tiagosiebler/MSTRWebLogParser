@@ -7,10 +7,10 @@ This specific project is built with:
 * Bootstrap 3
 
 # Live Demo
-A live demo of this website can be seen here:
+See the latest code in-action here:
 https://tiagosiebler.github.io/MSTRWebLogParser/build/
 
-This demo is a live implementation of the latest code in this repository.
+This demo is a live implementation of the latest code in this repository, the link can be bookmarked for easy access.
 
 # Basic Usage
 ## Development 
