@@ -1,3 +1,4 @@
+
 /* Styling for the ngProgress itself */
 #ngProgress {
     margin: 0;
@@ -212,3 +213,23 @@ html, body {
 .app-modal-window-max .modal-dialog.modal-lg{
 	width: 95%;
 }
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}
+.glyphicon-refresh-animate {
+    -animation: spin .7s infinite cubic-bezier(1, -0.1, 1, 1);
+    -webkit-animation: spin2 .7s infinite cubic-bezier(1, -0.1, 1, 1);
+    -webkit-animation: spin2 .7s infinite cubic-bezier(1, -0.1, 1, 1);
+    -moz-animation: spin2 .7s infinite cubic-bezier(1, -0.1, 1, 1);
+    -ms-animation: spin2 .7s infinite cubic-bezier(1, -0.1, 1, 1);
+    -o-animation:spin2 .7s infinite cubic-bezier(1, -0.1, 1, 1);
+    animation: spin .7s infinite cubic-bezier(1, -0.1, 1, 1); /* this comes last */
+}
+    

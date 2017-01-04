@@ -11,7 +11,10 @@
 
 			},
 			controller: ['$scope','$rootScope', function($scope, $rootScope) {
+
 				var eventHandler = function(e) {
+					$rootScope.progressBar.start();
+					
                     var clipboardData, pastedData;
 
                     // Stop data actually being pasted into div
@@ -27,51 +30,13 @@
 					$rootScope.index = 0;
                     $scope.parseXMLLog(pastedData);
                     $scope.$apply()
+					
+					$rootScope.progressBar.complete();
                 }
                 //$document.
                 var EVENT_TYPES = "paste";
                 document.getElementById('editableDiv').addEventListener(EVENT_TYPES, eventHandler);    
                 
-                $scope.pasted = false;
-                $scope.flipPaste = function(){
-                    
-                }
-                
-                $scope.pasteLog = function(param){
-                    debugger;
-                    
-                    var theURL = prompt("Please paste the log file here","<record><package>com.mstr.test</package><etc>...");
-                    //debugger;
-                    $rootScope.data = new Array();
-                    $scope.parseXMLLog(theURL);
-                }
-                
-
-                // doesn't work for most pages due to CORS
-                /*$scope.loadURL = function(param){
-                    var theURL = prompt("Please provide a URL to a MicroStrategy Web Log file","http://path/to/file");
-                    
-                    window.URL = window.URL || window.webkitURL;  // Take care of vendor prefixes.
-
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('GET', theURL, true);
-                    xhr.responseType = 'blob';
-
-                    xhr.onload = function(e) {
-                        if (this.status == 200) {
-                            var blob = this.response;
-                            var reader = new FileReader();
-
-                            reader.onloadend = function () {
-                                console.log(reader.result); //this is an ArrayBuffer
-                                window.URL.revokeObjectURL(theURL); // Clean up after yourself.
-                            }
-
-                            reader.readAsArrayBuffer(blob);
-                        }
-                    }
-                    xhr.send();
-                }//*/
                 $scope.concatExtraCols = function(row){					
 					
 					var template = { 
@@ -96,6 +61,8 @@
 						}
 					}
 				};
+				$scope.filesParsing = 0;
+				$scope.filesParsed = 0;
                 $scope.parseXMLLog = function(contentStr){
                     var xml = "<xml>" + contentStr +"</xml>";
                     var x2js = new X2JS();
@@ -105,7 +72,7 @@
                     //console.log("length: ",json.xml.length);
 
                     if(json.xml.record.length){
-                        console.log("Processing " + json.xml.record.length + " rows");
+                        //console.log("Processing " + json.xml.record.length + " rows");
 
                         for(var ii = 0;ii< json.xml.record.length;ii++){
                             $scope.concatExtraCols(json.xml.record[ii]);
@@ -119,27 +86,34 @@
                             $rootScope.index++;
 
                         }
-
                     }else{
-                        console.log("Processing 1 row");
+                        //console.log("Processing 1 row");
                         $scope.concatExtraCols(json.xml.record);
 
                         json.xml.record.id = $rootScope.index;
                         $rootScope.data.push(json.xml.record)
                         $rootScope.index++;
                     }
-
+					$scope.filesParsed++;
+					
+					if($scope.filesParsed == $scope.filesParsing){
+						$rootScope.progressBar.complete();
+						$rootScope.parsing = false;
+					}
                     //console.log("Current dataset: ", $rootScope.data);
-                    console.log("current dataset contains this many log rows: ", $rootScope.data.length)
+                    //console.log("current dataset contains this many log rows: ", $rootScope.data.length)
                     //debugger;
                 }
-				$scope.uploadXmlFile = function(files){
+				$scope.uploadXmlFile = function(files){					
 					if(!files) return;
 
 					$rootScope.data = new Array();
 					$rootScope.index = 0;
+					$rootScope.progressBar.start();
 					console.clear();
 					
+					$scope.filesParsing = files.length;
+                    $rootScope.parsing = true;
 			        if (files && files.length) {
 						$scope.log = "Processing " + files.length + " files.";
 						
@@ -151,10 +125,7 @@
 							reader.onloadend = function(e){
 								//debugger;
 								$scope.log = "Loaded " + i + "/" + files.length + " files.";
-								
-								//var xml = "<xml>" + e.target.result +"</xml>";
                                 $scope.parseXMLLog(e.target.result);
-								
 							};
 							reader.readAsText(file, 'UTF-8');
 						}

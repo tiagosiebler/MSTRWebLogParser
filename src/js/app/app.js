@@ -1,13 +1,15 @@
 (function() {	
-    angular.module('myApp', ['mainform','logtable','ngAnimate'])
+    angular.module('myApp', ['mainform','logtable','ngAnimate','ngProgress'])
 	//add cookies back in ,'ngCookies'
 	
-	.run(function($http,$rootScope,$uibModal) {		
+	.run(function($http,$rootScope,$uibModal,ngProgressFactory) {		
         $rootScope.authenticated = true;
         $rootScope.authToken = "test";
 		$rootScope.startField = "test";		
         $rootScope.data = new Array();
-
+		$rootScope.progressBar = ngProgressFactory.createInstance();
+        $rootScope.parsing = false;
+        
 		$rootScope.getLocation = function(){
 			return 'MSTR Web Log Parser'
 		}
@@ -24,6 +26,7 @@
                 //windowClass: 'app-modal-window',
             });
         }
+		//$rootScope.progressBar.complete();
 	})
 	
 	.config(function ($httpProvider) {
