@@ -127,6 +127,13 @@
 						x.document.close();
 				}
                 
+				//Highlight row on click
+				$scope.isSelected = [];
+				$scope.toggleSelection = function (log) {
+					log.isSelected =! log.isSelected;
+					console.log("Row clicked!", log.isSelected);
+				}
+
                 // open modal to display full log in scrollable subview
                 $scope.view = function(log){
                     // open a modal view of that log message
