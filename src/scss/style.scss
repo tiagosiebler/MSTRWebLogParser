@@ -232,4 +232,9 @@ html, body {
     -o-animation:spin2 .7s infinite cubic-bezier(1, -0.1, 1, 1);
     animation: spin .7s infinite cubic-bezier(1, -0.1, 1, 1); /* this comes last */
 }
-    
+
+.row-selected {
+    border-color: rgba(0,0,0,0.75);
+    border-style: solid;
+    border-width: 3px 3px 3px 10px;
+}
