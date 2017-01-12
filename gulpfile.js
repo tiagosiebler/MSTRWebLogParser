@@ -97,6 +97,10 @@ var js_paths = {
 	ngfileuploadshim: {
 		src: node_modules + 'ng-file-upload/dist/ng-file-upload-shim.min.js',
 		dest: "/ng-file-upload"
+	},
+	colresizable: {
+		src: node_modules + 'colresizable/colResizable-1.6.min.js',
+		dest: "/colresizable"
 	}
 };
 
@@ -185,6 +189,12 @@ gulp.task('angular_bootstrap_css', function () {
         .pipe(gulp.dest(vendorPath + css_paths.angular_bootstrap.dest))
 		.pipe(gulp.dest(vendorPathDev + css_paths.angular_bootstrap.dest))
 });
+// angular_bootstrapcss
+gulp.task('colresizable', function () {
+    return gulp.src([js_paths.colresizable.src])
+        .pipe(gulp.dest(vendorPath + js_paths.colresizable.dest))
+		.pipe(gulp.dest(vendorPathDev + js_paths.colresizable.dest))
+});
 
 
 gulp.task('bootstrap', ['bootstrap_js','bootstrap_css','bootstrap_fonts','angular_bootstrap','angular_bootstrap_css']);
@@ -216,7 +226,7 @@ gulp.task('ngtable', function() {
 
 
 // run through all vendor deps. These should've been installed with bower beforehand
-gulp.task('vendors', ['jquery','animatecss','angular','bootstrap','nprogress','ngtable']);
+gulp.task('vendors', ['jquery','animatecss','angular','bootstrap','nprogress','ngtable','colresizable']);
 
 // seems duplicate of js_dependencies_angular?
 
