@@ -40,6 +40,7 @@
     "animate.css": "^3.5.1",
     "bootstrap": "^3.3.7",
     "chart.js": "^2.2.1",
+    "colresizable": "^1.6.0",
     "jquery": "^3.1.0",
     "lodash": "https://registry.npmjs.org/lodash/-/lodash-1.0.2.tgz",
     "ng-file-upload": "^12.2.13",

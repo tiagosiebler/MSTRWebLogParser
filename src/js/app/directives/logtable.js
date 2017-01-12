@@ -85,6 +85,26 @@
                     //$event.preventDefault();
                     //$event.stopPropagation();
                 };
+
+				// Enable resize
+				$scope.resize = false;
+				$scope.enableResize = function () {
+					if ($scope.resize) {
+						$("#ngTable").colResizable({
+							disable: true
+						});
+						$scope.resize = false;
+					} else {
+						$("#ngTable").colResizable({
+							fixed: false,
+							liveDrag: true,
+							resizeMode: 'overflow',
+							gripInnerHtml:"<div class='grip'></div>", 
+   							draggingClass:"dragging"
+						});
+						$scope.resize = true;
+					}
+				}
                 
 				//esvit/ng-table/issues/189
 			    $scope.columns = [
