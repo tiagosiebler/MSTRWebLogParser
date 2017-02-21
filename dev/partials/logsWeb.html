@@ -1,0 +1,64 @@
+<div class="panel panel-default">
+	<!-- Default panel contents -->	
+	<div class="panel-heading clearfix">
+		<b>MSTR Web Logs - ({{data.length}} loaded) </b>
+		<b ng-show="tableParams.hasFilter()">- (Filtered results: {{tableParams.total()}})</b>
+		<div class="btn-group pull-right">
+			<button class="btn btn-default btn-xs" ng-click="enableResize()" ng-class="{'active': resize}"><span class="glyphicon glyphicon-resize-horizontal"></span> Resize</button>	
+			<button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter" ng-class="{'active': showFilter}"><span class="glyphicon glyphicon-filter"></span> Search</button>	
+			<!--<button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter"><span class="glyphicon glyphicon-plus"></span></button>-->
+		</div>
+	</div>
+	<div class="table table-responsive logTable">
+		<table ng-table="tableParams" id="ngTable" class="table table-condensed logTable" show-filter="showFilter" ng-table-columns-binding="columns">
+			
+			<!--<tr>
+				<th>Package</th>
+				<th>Level</th>
+				<th>MS</th>
+				<th>TimeStamp</th>
+				<th>Thread</th>
+				<th>Class</th>
+				<th>Method</th>
+				<th>Message</th>
+				<th>Exception</th>
+				<th>Others</th>
+				<th></th>
+			</tr>
+		log.exception.textLength
+				-->
+				<!-- info: log.level== 'MESSAGE', warning: log.level== 'SEVERE' text-primary  table-striped table-hover -->
+			<tr ng-repeat="log in $data track by log.id+log.miliseconds" ng-class="{'bg-primary': log.isSelected}" 
+                disabledng-mousedown="mouseDown(event)"
+                disabledng-mouseup  ="mouseUp(log)"
+                disabledsglclick="mouseUp(log)"
+                disabledng-mousemove="mouseMove(event)"
+                ng-dblClick="view(log)"
+                >
+				
+				<td title="'LID'" 			filter="{ id: 'number'}" 		sortable="'id'" 		ng-if="true" header-title="columns.LID.title" class="text-center">{{log.id}}</td>				
+				<td title="'Milliseconds'" 	filter="{ miliseconds: 'text'}" sortable="'miliseconds'" ng-if="true" class="text-center">{{log.miliseconds}}</td>
+				<td title="'TimeStamp'" 	filter="{ timestamp: 'text'}" 	sortable="'timestamp'"	ng-if="true" class="text-center">{{log.timestamp}}</td>
+				<td title="'Thread'"		filter="{ thread: 'text'}" 		sortable="'thread'"		ng-if="true" class="colThread text-center">{{log.thread}}</td>
+				<td title="'Level'" 		filter="{ level: 'text'}" 		sortable="'level'"		ng-if="true" ng-class="{'text-danger': log.level == 'SEVERE'}" class="text-center">{{log.level}}</td>
+				<td title="'Package'" 		filter="{ package: 'text'}" 	sortable="'package'" 	ng-if="true" header-title="columns.Package.title">{{log.package}}</td>
+				<td title="'Class'" 		filter="{ class: 'text'}" 		sortable="'class'"		ng-if="true">{{log.class}}</td>
+				<td title="'Method'" 		filter="{ method: 'text'}" 		sortable="'method'"		ng-if="true">{{log.method}}()</td>
+				<td title="'Message'" 		filter="{ message: 'text'}" 	sortable="'message'"	ng-if="true">{{log.message}}</td>
+
+				<td title="'Exception'" 	filter="{ exception: 'text'}" 	sortable="'exception'"	ng-if="true" ng-init="log.limit.exception=250">
+					<div class="colContents">
+						{{log.exception | limitTo: log.limit.exception }}{{log.exception.length > 20 ? '.....' : ''}}
+					</div>
+				</td>
+				<td title="'Others'" 		filter="{ others: 'text'}" 		sortable="'others'"		ng-if="true">{{log.others}}</td>
+				
+	            <td>
+					<button class="btn btn-default btn-sm" ng-click="toggleSelection(log)" ng-class="{'active': log.isSelected}" ng-dblClick="preventAction($event)"><span class="glyphicon glyphicon-flag"></span></button>
+					<button class="btn btn-default btn-sm" ng-click="view(log)" ng-dblClick="preventAction($event)"><span class="glyphicon glyphicon-eye-open"></span></button>
+					<button class="btn btn-danger btn-sm" ng-click="del(log)" ng-dblClick="preventAction($event)"><span class="glyphicon glyphicon-trash"></span></button>	
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>

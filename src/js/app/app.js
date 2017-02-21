@@ -1,14 +1,12 @@
 (function() {	
-    angular.module('myApp', ['mainform','logtable','ngAnimate','ngProgress'])
+    angular.module('myApp', ['startform','logsWeb','ngAnimate','ngProgress','Data'])
 	//add cookies back in ,'ngCookies'
 	
-	.run(function($http,$rootScope,$uibModal,ngProgressFactory) {		
+	.run(function($http,$rootScope,$uibModal,ngProgressFactory,Data) {		
         $rootScope.authenticated = true;
         $rootScope.authToken = "test";
 		$rootScope.startField = "test";		
         $rootScope.data = new Array();
-		$rootScope.progressBar = ngProgressFactory.createInstance();
-        $rootScope.parsing = false;
         
 		$rootScope.getLocation = function(){
 			return 'MSTR Web Log Parser'
@@ -21,12 +19,20 @@
              var modalInstance = $uibModal.open({
                 animation: true,
                 templateUrl: 'partials/sub/helpView.html',
-                //controller: 'logViewCtrl',
                 size: 'lg',
-                //windowClass: 'app-modal-window',
             });
         }
-		//$rootScope.progressBar.complete();
+		$rootScope.isParsing = function(){
+			if(typeof(Data) == 'undefined') return false;
+			return Data.isParsing();
+		};
+		$rootScope.isUploading = function(){
+			if(typeof(Data) == 'undefined') return false;
+			return Data.isUploading();
+		};
+		
+		// link any monitoring vars to rootScope, so they're accessible from the DOM scope
+		
 	})
 	
 	.config(function ($httpProvider) {

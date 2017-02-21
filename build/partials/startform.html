@@ -1,0 +1,7 @@
+<div class="row thumbnail fill"><!--<textarea id="inputForm" onclick="this.select()" style="width:100%;border:none" autocomplete="off" onkeypress="return myFunction(this)" onkeyup="resize()" rows="10" class="fill">
+	</textarea>--> <input type="file" id="importFile" class="uploadButton" style="display:none"><div ngf-drop ngf-select class="drop-box" ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true" accept=".log" ngf-pattern="'.log'" ng-model="files" class="drop-box" aaaaaonclick="document.getElementById('importFile').click()">Drop .log file here / click to upload<br><br>Note: only .log files are accepted</div><div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div><ul ng-show="files && isParsing()"><li ng-repeat="f in files" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}</li></ul><div ng-show="files && isParsing()">{{log}}</div></div><div class="form-group"><input type="text" class="form-control" id="editableDiv" contenteditable="true" placeholder="or paste your log here..." style="text-align: center" autofocus></div><!--
+<div id='editableDiv' contenteditable='true'>Paste</div>
+<button type="button" class="btn btn-default" ng-click="pasteLog(this)">
+    <span class="glyphicon glyphicon-cloud" aria-hidden="true"></span> Paste Log
+</button>
+-->

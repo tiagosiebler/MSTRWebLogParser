@@ -1,26 +1,28 @@
-angular.module('logViewCtrl', [])//'confirm'
-	.controller('logViewCtrl', ['$scope', '$uibModalInstance', 'log', '$timeout', '$document', '$rootScope', function ($scope, $uibModalInstance, log, $timeout, $document, $rootScope) {
-        $scope.log = log;//direct reference instead of clone
+angular.module('inspectLogWebCtrl', [])//'confirm'
+	.controller('inspectLogWebCtrl', ['$scope', '$uibModalInstance', 'log', '$timeout', '$document', 'Data', function ($scope, $uibModalInstance, log, $timeout, $document, Data) {
+	    var self = $scope;				
+        
+		self.log = log;//direct reference instead of clone
 		
-		$scope.saveLabel = "Save Application"
-		$scope.saveAction = "next";
-	    $scope.save = function () {
+		self.saveLabel = "Save Application"
+		self.saveAction = "next";
+	    self.save = function () {
 			var result = {
-				action: $scope.saveAction,
-				data: $scope.app
+				action: self.saveAction,
+				data: self.app
 			};
 			$uibModalInstance.close(result);
 	    };
 		
 
-	    $scope.cancel = function () {
+	    self.cancel = function () {
 			$uibModalInstance.dismiss('cancel');
 	    };
 		
-        $scope.navigateTo = function($direction){
+        self.navigateTo = function($direction){
             var result = {
                 action: $direction,
-                data: $scope.log.id
+                data: self.log.id
             };
             $uibModalInstance.close(result);
         }
@@ -34,20 +36,19 @@ angular.module('logViewCtrl', [])//'confirm'
             //37 = left key
             //39 = right key
             if (event.keyCode === EnumKeys.left) {
-                if($scope.log.id != ($rootScope.data.length - 1)){//array notation, last element is actually 1 before total element count
+                if(self.log.id != (Data.logs.web.length - 1)){//last element is actually 1 before total element count due to array notation
                    // debugger;
-                    console.log("moved left: ",$scope.log);
-                    $scope.navigateTo("previous");
+                    console.log("moved left: ",self.log);
+                    self.navigateTo("previous");
                 }else{
                     console.log("refusing left action, this is the most recent log file");
                 }
             }
             if (event.keyCode === EnumKeys.right) {
-                //delete($scope.log);
-                //$scope.log = $rootScope.data[(log.id+1)];
-                if($scope.log.id != 0){
-                    console.log("moved right: ",$scope.log);
-                    $scope.navigateTo("next");
+                //delete(self.log);
+                if(self.log.id != 0){
+                    console.log("moved right: ",self.log);
+                    self.navigateTo("next");
                 }else{
                     console.log("refusing right action, this is the last log file");
                 }
@@ -58,7 +59,7 @@ angular.module('logViewCtrl', [])//'confirm'
         $document.bind(EVENT_TYPES, eventHandler);
         
 		// catch modal close actions and add warning with possibility to cancel
-		$scope.$on('modal.closing', function(event, reason, closed) {
+		self.$on('modal.closing', function(event, reason, closed) {
 			var message = "You are about to leave the edit view. Uncaught reason. Are you sure?";
 
 			if(typeof reason === 'object' && reason.action === 'save'){
@@ -90,21 +91,21 @@ angular.module('logViewCtrl', [])//'confirm'
 			}//*/
 		});
 			  
-		$scope.autoExpand = function(e) {
+		self.autoExpand = function(e) {
 			var element = typeof e === 'object' ? e.target : document.getElementById(e);
 	        //element.style.height = 'auto';
 	        element.style.height = element.scrollHeight + 2 +'px';
 	    };
 		// init stuff here
-		$scope.onShow = function(){
+		self.onShow = function(){
 		    $timeout(function(){
-                $scope.autoExpand('email_body');
+                self.autoExpand('email_body');
             }, 0);
 			
 		}
 		
 		function resize(){
-		    //$scope.autoExpand('email_body');
+		    //self.autoExpand('email_body');
 		}
 	}
 ]);

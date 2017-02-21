@@ -1,19 +1,20 @@
 (function() {
-    angular.module('mainform', ['ngFileUpload'])
+    angular.module('startform', ['ngFileUpload','Data'])
 
     // directives make HTML easier, pull in subfiles without much effort.
     // <product-title></>
-    .directive('mainform', function() {
+    .directive('startform', function() {
         return {
             restrict: 'E',
-            templateUrl: 'partials/mainform.html',
+            templateUrl: 'partials/startform.html',
             link: function (scope, element, attrs) {
 
 			},
-			controller: ['$scope','$rootScope', function($scope, $rootScope) {
-
-				var eventHandler = function(e) {
-					$rootScope.progressBar.start();
+			controller: ['$scope','$rootScope','Data', function($scope, $rootScope, Data) {
+			    var self = $scope;				
+				
+				var inputPasteHandler = function(e) {
+					Data.progressBar.start();
 					
                     var clipboardData, pastedData;
 
@@ -28,42 +29,16 @@
                     // Do whatever with pasteddata
                     $rootScope.data = new Array();
 					$rootScope.index = 0;
-                    $scope.parseXMLLog(pastedData);
-                    $scope.$apply()
+                    self.parseXMLLog(pastedData);
+                    self.$apply()
 					
-					$rootScope.progressBar.complete();
+					Data.progressBar.complete();
                 }
                 //$document.
                 var EVENT_TYPES = "paste";
-                document.getElementById('editableDiv').addEventListener(EVENT_TYPES, eventHandler);    
-                
-                $scope.concatExtraCols = function(row){					
-					
-					var template = { 
-					    'package' : 'Java package within which message was triggered', 
-					    'level' : 'Logging level',
-					    'miliseconds' : 'Message milliseconds',
-					    'timestamp' : 'Message timestamp',
-					    'thread' : 'Thread ID',
-					    'class' : 'Java class that triggered this message',
-					    'method' : 'Method in java class that triggered this message',
-					    'message' : 'Message',
-					    'exception' : 'Full exception, if available',
-						'others' : 'Used as a placeholder for abnormal extra xml tags and values'
-					};
-					if(!row.hasOwnProperty('others')) row.others = "";											
-					
-					for (var key in row) {
-						// check against list for known keys
-					    if (!template.hasOwnProperty(key) && row.hasOwnProperty(key) && typeof(row[key]) == 'string') {
-						    //console.log($rootScope.index + ": "+ key + " ( "+  typeof(row[key]) + ") -> " + row[key]);
-							row.others += "(" + key + ")->" + row[key] + "; \n";
-						}
-					}
-				};
-				$scope.filesParsing = 0;
-				$scope.filesParsed = 0;
-                $scope.parseXMLLog = function(contentStr){
+                document.getElementById('editableDiv').addEventListener(EVENT_TYPES, inputPasteHandler);    
+				
+                self.parseXMLLog = function(contentStr){
                     //todo add logic here to determine the type of log (web/webxmlAPI/kernelAPI/DSSErrors.log)
                     
                     // web log files are xml but aren't wrapped in an XML tab.
@@ -74,7 +49,7 @@
                         console.log("Processing " + json.xml.record.length + " rows");
 
                         for(var ii = 0;ii< json.xml.record.length;ii++){
-                            $scope.concatExtraCols(json.xml.record[ii]);
+                            Data.concatExtraColsWeb(json.xml.record[ii]);
 
                             json.xml.record[ii].id = $rootScope.index;
                             $rootScope.data.push(json.xml.record[ii]);
@@ -82,40 +57,39 @@
                         }
                     }else{
                         console.log("Processing 1 row");
-                        $scope.concatExtraCols(json.xml.record);
+                        Data.concatExtraColsWeb(json.xml.record);
 
                         json.xml.record.id = $rootScope.index;
                         $rootScope.data.push(json.xml.record)
                         $rootScope.index++;
                     }
-					$scope.filesParsed++;
+					Data.state.filesParsed++;
 					
-					if($scope.filesParsed == $scope.filesParsing){
-						$rootScope.progressBar.complete();
-						$rootScope.parsing = false;
+					if(Data.state.filesParsed == Data.state.filesParsing){
+						Data.progressBar.complete();
+						Data.state.isParsing = false;
 					}
                     //console.log("Current dataset: ", $rootScope.data);
                     console.log("current dataset contains this many log rows: ", $rootScope.data.length)
-                    //debugger;
                 }
-				$scope.uploadXmlFile = function(files){					
+				self.uploadXmlFile = function(files){					
 					if(!files) return;
 
 					$rootScope.data = new Array();
 					$rootScope.index = 0;
-					
-					$scope.filesParsed = 0;
-					$scope.filesParsing = 0;
+
+					Data.state.filesParsed = 0;
+					Data.state.filesParsing = 0;
 					console.clear();
 					
-					$scope.filesParsing = files.length;
+					Data.state.filesParsing = files.length;
 					console.log("Upload XML file");
 					
 			        if (files && files.length) {
-						$rootScope.progressBar.start();
-                        $rootScope.parsing = true;
+						Data.progressBar.start();
+                        Data.state.isParsing = true;
 
-						$scope.log = "Processing " + files.length + " files.";
+						self.log = "Processing " + files.length + " files.";
 						
 			            for (var i = 0; i < files.length; i++) {
 			                var file = files[i];
@@ -124,8 +98,8 @@
 							
 							reader.onloadend = function(e){
 								//debugger;
-								$scope.log = "Loaded " + i + "/" + files.length + " files.";
-                                $scope.parseXMLLog(e.target.result);
+								self.log = "Loaded " + i + "/" + files.length + " files.";
+                                self.parseXMLLog(e.target.result);
 							};
 							reader.readAsText(file, 'UTF-8');
 						}
@@ -133,23 +107,23 @@
 						console.log("no files registered: ",files);
 					}
                     //delete(files);
-					//$scope.$apply();
+					//self.$apply();
 				};
 				
-				$scope.$watch('files', function () {
-					$scope.uploadXmlFile($scope.files);
+				self.$watch('files', function () {
+					self.uploadXmlFile(self.files);
 			    });
 				
-				$scope.$watch('file', function () {
-					if ($scope.file != null) {
-					    $scope.files = [$scope.file]; 
+				self.$watch('file', function () {
+					if (self.file != null) {
+					    self.files = [self.file]; 
 					}
 				});
-				$scope.log = '';
+				self.log = '';
 				
 			    
 			}],
-			controllerAs: 'mainformCtrl'
+			controllerAs: 'startformCtrl'
         };
     })
     .directive('sglclick', ['$parse', function($parse) {

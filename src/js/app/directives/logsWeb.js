@@ -1,17 +1,19 @@
 (function () {
-    angular.module('logtable', ['ngTable','ui.bootstrap','logViewCtrl'])
+    angular.module('logsWeb', ['ngTable','ui.bootstrap','inspectLogWebCtrl'])
 
-    .directive('logtable', function() {
+    .directive('logsweb', function() {
         return {
             restrict: 'E',
-            templateUrl: 'partials/logtable.html',
+            templateUrl: 'partials/logsWeb.html',
 			link: function (scope, element, attrs) {
 				
 			},
 			controller: ['$scope','$rootScope','NgTableParams', '$filter', '$timeout','$uibModal', function($scope, $rootScope, NgTableParams, $filter, $timeout, $uibModal) {	
-				$scope.total = {};
+			    var self = $scope;				
+
+				self.total = {};
 			    
-				$scope.filters = {
+				self.filters = {
 		            package: '',
 					level: '',
 					miliseconds: '',
@@ -24,77 +26,59 @@
 					others: ''
 	        	};
 				
-				$scope.pagination = {};
-				$scope.pagination.currentPage = 1;
-				$scope.pagination.perPage = 50;
+				self.pagination = {};
+				self.pagination.currentPage = 1;
+				self.pagination.perPage = 50;
 
-				/*
-				function testRow(){
-					var xml = '<record reset="true">  <package>mytestrow!!!!</package>  <level>SEVERE</level>  <miliseconds>1473163518955</miliseconds>  <timestamp>09/06/2016 13:05:18:956</timestamp>  <thread>0</thread>  <class>Connection</class>  <method>newSocket</method>  <message>Operation timed out (com.microstrategy.webapi.MSTRWebAPIException)</message>  <exception>cthisismytestrow</exception></record>';
-
-					var xml = "<xml>" + xml +"</xml>";
-					var x2js = new X2JS();
-				
-					var json = x2js.xml_str2json(xml);
-				
-					console.log("length: ",json.xml.length);
-				
-					if(json.xml.record.length){
-						console.log(json.xml.record.length + " rows");
-						for(var ii = 0;ii< json.xml.record.length;ii++){
-							$rootScope.data.push(json.xml.record[ii]);
-						}
-					}else{
-						console.log("1 row");
-						$rootScope.data.push(json.xml.record)
-					}
-				}
-				testRow();
-				//*/
-				//console.log("using data: ",$rootScope.data);
-			    var self = $scope;
-				
 				self.debug = function(param){
 					debugger;
 				}
 				
-                $scope.dragging = false;
-				$scope.mouseIsDown = false;
-                $scope.mouseDown = function(event){
+				// all tracking vars for drag n drop action
+                self.dragging = false;
+				self.mouseIsDown = false;
+                self.mouseDown = function(event){
                     //console.log("mouse down");
-                    $scope.mouseIsDown = true;
-                    $scope.dragging = false;
+                    self.mouseIsDown = true;
+                    self.dragging = false;
                 };
-                $scope.mouseUp = function(log){
+                self.mouseUp = function(log){
                     //console.log("mouse up");
-                    $scope.mouseIsDown = false;
+                    self.mouseIsDown = false;
                     
-                    if($scope.dragging){
+                    if(self.dragging){
                         //console.log("Must have dragged");
                         return false;
                     }else{
-                        $scope.view(log);
+                        self.view(log);
                     }
                 };
-                $scope.mouseMove = function(event){
+                self.mouseMove = function(event){
                     //console.log("mouse moved");
-                    $scope.dragging = true;
+                    self.dragging = true;
                 };
-                $scope.dblClick = function($event){
+                self.dblClick = function($event){
                     console.log("double click");
                     //$event.preventDefault();
                     //$event.stopPropagation();
+					
                 };
+				self.preventAction = function($event){
+					$event.preventDefault();
+					$event.stopPropagation();
+				}
 
 				// Enable resize
-				$scope.resize = false;
-				$scope.enableResize = function () {
-					if ($scope.resize) {
+				self.resize = false;
+				self.enableResize = function () {
+					if (self.resize) {
+						console.log("disabling resize");
 						$("#ngTable").colResizable({
 							disable: true
 						});
-						$scope.resize = false;
+						self.resize = false;
 					} else {
+						console.log("enabling resize");
 						$("#ngTable").colResizable({
 							fixed: false,
 							liveDrag: true,
@@ -102,12 +86,14 @@
 							gripInnerHtml:"<div class='grip'></div>", 
    							draggingClass:"dragging"
 						});
-						$scope.resize = true;
+						self.resize = true;
 					}
-				}
+				};
                 
 				//esvit/ng-table/issues/189
-			    $scope.columns = [
+				/*
+			    self.columns = [
+					{ field: "LID", 		title: "LID", 			show: true },
 					{ field: "Package", 	title: "Package", 		show: true },
 					{ field: "Level", 		title: "Level", 		show: true },
 					{ field: "Milliseconds", title: "Milliseconds",	show: true },
@@ -117,9 +103,15 @@
 					{ field: "Method", 		title: "Method", 		show: true },
 					{ field: "Exception", 	title: "Exception", 	show: true },
 					{ field: "Others", 		title: "Others", 		show: true },
-			    ];
+			    ];//*/
+				
+				self.columns = {
+					"LID": {"title": "Reference ID of log message within log file. Higher numbers are more recent messages."},
+					"Package": {"title": "Package Name"},
+				};
 
-			    $scope.del = function(row) {
+				// delete a row from the dataset
+			    self.del = function(row) {
 					_.remove(self.tableParams.settings().dataset, function(item) {
 						return row === item;
 					});
@@ -131,7 +123,9 @@
 						}
 					});
 				}
-				$scope.alert = function(param){
+				
+				// create a popup with contents of param, deprecated in favour of bootstrap modals
+				self.alert = function(param){
 					//alert(param);
 					var html = document.createElement('html');
 					var body = document.createElement('body');
@@ -148,19 +142,19 @@
 				}
                 
 				//Highlight row on click
-				$scope.isSelected = [];
-				$scope.toggleSelection = function (log) {
+				self.isSelected = [];
+				self.toggleSelection = function (log) {
 					log.isSelected =! log.isSelected;
-					console.log("Row clicked!", log.isSelected);
+					console.log("row selection toggled: ", log.isSelected);
 				}
 
                 // open modal to display full log in scrollable subview
-                $scope.view = function(log){
+                self.view = function(log){
                     // open a modal view of that log message
                     var modalInstance = $uibModal.open({
 						animation: true,
-						templateUrl: 'partials/sub/logView.html',
-						controller: 'logViewCtrl',
+						templateUrl: 'partials/sub/inspectLogWeb.html',
+						controller: 'inspectLogWebCtrl',
 						size: 'lg',
             			windowClass: 'app-modal-window',
 						resolve: {
@@ -180,7 +174,7 @@
                             nextID = result.data + 1;
                         }
                         //todo this doesn't work when sort order is changed
-                        $scope.view($rootScope.data[nextID]);
+                        self.view($rootScope.data[nextID]);
                     }, function () {
 						//console.log('Modal dismissed at: ' + new Date());
 						}
@@ -188,13 +182,13 @@
                 }
                 
                 // open small modal with quick view of passed parameter
-                $scope.quickView = function(param){
+                self.quickView = function(param){
                     debugger;
                 }
 
-			    $scope.tableParams = new NgTableParams({
-			        page: $scope.pagination.currentPage,            // show first page
-			        count: $scope.pagination.perPage,           // count per page
+			    self.tableParams = new NgTableParams({
+			        page: self.pagination.currentPage,            // show first page
+			        count: self.pagination.perPage,           // count per page
 			        sorting: { 
                         id: 'desc',
 			            package: '',
@@ -207,7 +201,7 @@
 						message: '',
 						exception: ''
 					},
-			        filter: $scope.filters,
+			        filter: self.filters,
 			    }, 
 				{
 			        //filterSwitch: true,
@@ -224,7 +218,7 @@
 				$rootScope.$watch('data', function () {
 					//debugger;
 					$timeout(function(){
-						$scope.tableParams.settings({
+						self.tableParams.settings({
 							dataset: $rootScope.data
 						});
 						//debugger;
@@ -234,7 +228,7 @@
 				});
 				
 			}],
-			controllerAs: 'logtableCtrl'
+			controllerAs: 'logsWebCtrl'
         };
     });
 })();

@@ -9,10 +9,10 @@
 	        ngf-pattern="'.log'"
 	ng-model="files" class="drop-box" aaaaaonclick="document.getElementById('importFile').click()">Drop .log file here / click to upload <br /><br />Note: only .log files are accepted</div>
     <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
-    <ul ng-show="files && parsing">
+    <ul ng-show="files && isParsing()">
        <li ng-repeat="f in files" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}</li>
     </ul>
-    <div ng-show="files && parsing">
+    <div ng-show="files && isParsing()">
        {{log}}
     </div>
 </div>
