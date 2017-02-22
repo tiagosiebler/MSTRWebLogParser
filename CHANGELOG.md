@@ -1,5 +1,13 @@
 # MicroStrategy Log Parser - Changelog
 
+- Issues & Enhancements: https://github.com/tiagosiebler/MSTRWebLogParser/issues
+- Access the log parser: https://tiagosiebler.github.io/MSTRWebLogParser/build/
+
+## 2017-Feb-22
+- Updated help section of parser.
+- Added quick-links to changelog.
+- Updated README.
+
 ## 2017-Feb-21
 - Added a changelog.
 - Define charset at start of toaster.scss, to prevent charset clash in author name & copyright during compilation.
@@ -16,3 +24,5 @@
 - Refactored logstable as logsWeb, in preparation for additional log formats.
 - Refactored mainform -> startform for clarity in source.
 - Refactored logView -> inspectWebLog, since we'll likely have different inspectors per log type.
+- Row marking now only works with the dedicated flag button (Issue #18)
+- Prevent log viewer/inspector from opening when double clicking on action buttons, avoiding conflicting actions.

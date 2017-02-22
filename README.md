@@ -12,6 +12,9 @@ https://tiagosiebler.github.io/MSTRWebLogParser/build/
 
 This demo is a live implementation of the latest code in this repository, the link can be bookmarked for easy access.
 
+# Issues & Enhancements
+Report issues and request enhancements in the issue tracker: https://github.com/tiagosiebler/MSTRWebLogParser/issues
+View the changelog of the parser here: https://github.com/tiagosiebler/MSTRWebLogParser/blob/master/CHANGELOG.md
 
 # Getting Involved
 ## Development 
