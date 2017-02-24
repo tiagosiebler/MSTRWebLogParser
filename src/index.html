@@ -63,15 +63,20 @@
             </div>
 			
 			<div class="mainTableContainer" ng-show="$root.totalData && !isParsing()" class="flipin flipout">
-			    <uib-tabset active="active">
-					<uib-tab index="0" heading="Web" ng-show="dataset.logs.web.length != 0">
+				<div id="normalView" ng-if="dataset.logs.web.length == 0 || dataset.logs.kernel.length == 0">
 						<logsweb></logsweb>
-					</uib-tab>
-					<uib-tab index="1" heading="Kernel XML API" ng-show="dataset.logs.kernel.length != 0">
 						<logskernel></logskernel>
-					</uib-tab>
-					
-			    </uib-tabset>
+				</div>
+				<div id="tabbedView" ng-if="dataset.logs.web.length != 0 && dataset.logs.kernel.length != 0">
+					    <uib-tabset active="active">
+							<uib-tab heading="Web">
+								<logsweb></logsweb>
+							</uib-tab>
+							<uib-tab heading="Kernel XML API">
+								<logskernel></logskernel>
+							</uib-tab>
+					    </uib-tabset>
+				</div>
 				
 				
 			</div>
