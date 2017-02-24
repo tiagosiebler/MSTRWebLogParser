@@ -149,7 +149,7 @@
                             nextID = result.data + 1;
                         }
                         //todo this doesn't work when sort order is changed
-                        self.view($rootScope.dataset.logs.kernel[nextID]);
+                        self.viewKernelMessage($rootScope.dataset.logs.kernel[nextID]);
                     }, function () {
 						//console.log('Modal dismissed at: ' + new Date());
 						}

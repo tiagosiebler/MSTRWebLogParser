@@ -36,7 +36,7 @@
                         //console.log("Must have dragged");
                         return false;
                     }else{
-                        self.view(log);
+                        self.viewWebMessage(log);
                     }
                 };
                 self.mouseMove = function(event){
@@ -160,7 +160,7 @@
                             nextID = result.data + 1;
                         }
                         //todo this doesn't work when sort order is changed
-                        self.view($rootScope.dataset.logs.web[nextID]);
+                        self.viewWebMessage($rootScope.dataset.logs.web[nextID]);
                     }, function () {
 						//console.log('Modal dismissed at: ' + new Date());
 						}

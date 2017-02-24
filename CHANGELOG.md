@@ -14,6 +14,7 @@
 - Fixed escaping of invalid XML characters when parsing web logs, causing some web logs to fail the parsing process.
 - Updated README.
 - Fixed wrong sorting after using larger datasets (Issue #24).
+- Fixed left/right keyboard navigation when inspecting kernel log message.
 
 ## 2017-Feb-22
 - Updated help section of parser.
