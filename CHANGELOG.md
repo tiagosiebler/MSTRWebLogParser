@@ -5,11 +5,14 @@
 
 ## 2017-Feb-24
 - Refactored data processing logic into more generic functions within dedicated data parsing factory.
+- Added method to detect type of log file.
 - Fixed 'left key' navigation not triggering previous log message when inspecting log.
 - Added basic Kernel XML API parsing.
 - Added error handling for Kernel API parser, since the log format isn't always predictable and may need further tuning. If an unexpected message couldn't be parsed in the log file, it'll throw a warning with details.
 - Added error handling to web log parsing process. If something doesn't parse properly, you'll know about it.
+- Fixed issue placing dragging area over error view.
 - Fixed escaping of invalid XML characters when parsing web logs, causing some web logs to fail the parsing process.
+- Updated README.
 
 ## 2017-Feb-22
 - Updated help section of parser.
