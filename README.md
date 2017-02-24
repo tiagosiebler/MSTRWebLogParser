@@ -6,25 +6,27 @@ This specific project is built with:
 * AngularJS + various submodules
 * Bootstrap 3
 
-# Live Demo
+## Live Demo
 See the latest code in-action here:
 https://tiagosiebler.github.io/MSTRWebLogParser/build/
 
 This demo is a live implementation of the latest code in this repository, the link can be bookmarked for easy access.
 
-# Issues & Enhancements
-Report issues and request enhancements in the issue tracker: 
+## Supported MicroStrategy Log Formats
+- MicroStrategy Web server generated MSTRLog files, found in MSTRWeb/WEB-INF/log.
+- MicroStrategy Web server generated AdvMSTRLogwebapi*.log files.
+- MicroStrategy Mobile server log files, similar to the above.
+- MicroStrategy Web & Mobile Server Kernel XML API Traces.
+
+## Issues & Enhancements
+Report issues and request enhancements in the issue tracker, or contact Tiago: 
 https://github.com/tiagosiebler/MSTRWebLogParser/issues
 
 View the changelog of the parser: 
 https://github.com/tiagosiebler/MSTRWebLogParser/blob/master/CHANGELOG.md
 
-
-# Supported MicroStrategy Log Formats
-- MicroStrategy Web server generated MSTRLog files, found in MSTRWeb/WEB-INF/log.
-- MicroStrategy Web server generated AdvMSTRLogwebapi*.log files.
-- MicroStrategy Mobile server log files, similar to the above.
-- MicroStrategy Web & Mobile Server Kernel XML API Traces.
+## Error Handling
+The logic driving the parser has error handling in place. If anything can't be parsed for any reason, it'll throw a visible error in the interface. Please let me know if this happens.
 
 # Getting Involved
 ## Development 
