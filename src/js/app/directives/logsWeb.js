@@ -135,7 +135,7 @@
 				}
 
                 // open modal to display full log in scrollable subview
-                self.view = function(log){
+                self.viewWebMessage = function(log){
                     // open a modal view of that log message
                     var modalInstance = $uibModal.open({
 						animation: true,

@@ -66,7 +66,9 @@
 				if(!row.hasOwnProperty('others')) row.others = "";											
 				for (var key in row) {
 					// check against list for known keys
-				    if (!template.hasOwnProperty(key) && row.hasOwnProperty(key) && typeof(row[key]) == 'string') {
+					if(key == 'trace')
+						row.exception = row[key];
+				    else if (!template.hasOwnProperty(key) && row.hasOwnProperty(key) && typeof(row[key]) == 'string') {
 					    //console.log($rootScope.dataset.indexes.web + ": "+ key + " ( "+  typeof(row[key]) + ") -> " + row[key]);
 						row.others += "(" + key + ")->" + row[key] + "; \n";
 					}

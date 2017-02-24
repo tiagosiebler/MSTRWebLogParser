@@ -18,6 +18,8 @@
 - Fixed clash in resizing action between both log tables.
 - Removed blue outline that remains after clicking button (Issue #19).
 - Log views are now shown in tabs (Issue #22).
+- Traces in web logs now show as the stack trace, when inspecting web logs one by one (Issue #11). 
+- Fixed broken double-click in web log list.
 
 ## 2017-Feb-22
 - Updated help section of parser.
