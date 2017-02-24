@@ -61,8 +61,17 @@
             </div>
 			
 			<div class="mainTableContainer" ng-show="$root.totalData && !isParsing()" class="flipin flipout">
-				<logsweb></logsweb>
-				<logskernel></logskernel>
+			    <uib-tabset active="active">
+					<uib-tab index="0" heading="Web" ng-show="dataset.logs.web.length != 0">
+						<logsweb></logsweb>
+					</uib-tab>
+					<uib-tab index="1" heading="Kernel XML API" ng-show="dataset.logs.kernel.length != 0">
+						<logskernel></logskernel>
+					</uib-tab>
+					
+			    </uib-tabset>
+				
+				
 			</div>
 			
 			<div class="col-md-12" ng-hide="$root.totalData" class="flipin flipout">

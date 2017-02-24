@@ -55,14 +55,14 @@
 				}
 
 				// Enable resize
-				self.resize = false;
-				self.enableResize = function () {
-					if (self.resize) {
+				self.resizeWeb = false;
+				self.toggleResizeWeb = function () {
+					if (self.resizeWeb) {
 						console.log("disabling resize");
 						$("#ngTableWebLogs").colResizable({
 							disable: true
 						});
-						self.resize = false;
+						self.resizeWeb = false;
 					} else {
 						console.log("enabling resize");
 						$("#ngTableWebLogs").colResizable({
@@ -72,7 +72,7 @@
 							gripInnerHtml:"<div class='grip'></div>", 
    							draggingClass:"dragging"
 						});
-						self.resize = true;
+						self.resizeWeb = true;
 					}
 				};
                 

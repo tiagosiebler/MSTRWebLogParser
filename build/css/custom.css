@@ -307,6 +307,9 @@ html, body {
 .keepFront {
   z-index: 1; }
 
+button {
+  outline: none !important; }
+
 @charset "UTF-8";
 /*
  * Toastr

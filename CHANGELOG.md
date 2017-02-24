@@ -15,6 +15,8 @@
 - Updated README.
 - Fixed wrong sorting after using larger datasets (Issue #24).
 - Fixed left/right keyboard navigation when inspecting kernel log message.
+- Fixed clash in resizing action between both log tables.
+- Removed blue outline that remains after clicking button (Issue #19).
 
 ## 2017-Feb-22
 - Updated help section of parser.

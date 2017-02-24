@@ -70,9 +70,5 @@ angular.module('inspectLogKernelCtrl', [])//'confirm'
             }, 0);
 			
 		}
-		
-		function resize(){
-		    //self.autoExpand('email_body');
-		}
 	}
 ]);
