@@ -17,6 +17,7 @@
 - Fixed left/right keyboard navigation when inspecting kernel log message.
 - Fixed clash in resizing action between both log tables.
 - Removed blue outline that remains after clicking button (Issue #19).
+- Log views are now shown in tabs (Issue #22).
 
 ## 2017-Feb-22
 - Updated help section of parser.
