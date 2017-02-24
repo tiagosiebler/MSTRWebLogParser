@@ -103,7 +103,7 @@
 				};
 
 				// delete a row from the dataset
-			    self.del = function(row) {
+			    self.delKernel = function(row) {
 					_.remove(self.kernelLogTableParams.settings().dataset, function(item) {
 						return row === item;
 					});

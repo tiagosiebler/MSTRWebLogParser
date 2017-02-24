@@ -97,7 +97,7 @@
 				};
 
 				// delete a row from the dataset
-			    self.del = function(row) {
+			    self.delWeb = function(row) {
 					_.remove(self.webLogTableParams.settings().dataset, function(item) {
 						return row === item;
 					});
