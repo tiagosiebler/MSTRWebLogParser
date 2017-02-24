@@ -28,7 +28,7 @@
 		log.exception.textLength
 				-->
 				<!-- info: log.level== 'MESSAGE', warning: log.level== 'SEVERE' text-primary  table-striped table-hover -->
-			<tr ng-repeat="log in webLogTableParams.data track by log.id+log.miliseconds" ng-class="{'bg-primary': log.isSelected}" 
+			<tr ng-if="!dataset.state.isParsing" ng-repeat="log in webLogTableParams.data track by log.id+log.miliseconds" ng-class="{'bg-primary': log.isSelected}" 
                 disabledng-mousedown="mouseDown(event)"
                 disabledng-mouseup  ="mouseUp(log)"
                 disabledsglclick="mouseUp(log)"

@@ -230,10 +230,17 @@
 						self.kernelLogTableParams.reload();
 						
 					}, 300)
-					
-					
 				});
 
+				$scope.$on('dataset.kernel.added', function(){
+					//console.log("handle added dataset");
+					$timeout(function(){
+						self.kernelLogTableParams.settings({
+							dataset: $rootScope.dataset.logs.kernel
+						});
+						self.kernelLogTableParams.reload();
+					}, 100);
+				});
 			}],
 			controllerAs: 'logsKernelCtrl'
         };

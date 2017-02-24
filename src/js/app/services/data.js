@@ -164,6 +164,7 @@
 					$rootScope.dataset.state.isParsing = false;
 				}
                 //console.log("Current dataset: ", $rootScope.dataset);
+				$rootScope.$broadcast("dataset.web.added");
                 console.log("current weblog dataset contains this many log rows: ", $rootScope.dataset.logs.web.length)
             }
 			Data.processKernelMessage = function(message, dataset, index){
@@ -324,7 +325,7 @@
 					Data.progressBar.complete();
 					$rootScope.dataset.state.isParsing = false;
 				}
-				
+				$rootScope.$broadcast("dataset.kernel.added");
                 console.log("current kernelAPI dataset contains this many log rows: ", $rootScope.dataset.logs.kernel.length);
 			}
 			

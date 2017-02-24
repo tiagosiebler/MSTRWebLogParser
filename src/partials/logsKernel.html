@@ -11,7 +11,8 @@
 	</div>
 	<div class="table table-responsive logTable">
 		<table ng-table="kernelLogTableParams" id="ngTableKernelLogs" class="table table-condensed logTable" show-filter="showFilter" ng-table-columns-binding="columns">
-			<tr ng-repeat="log in kernelLogTableParams.data track by log.id+log.miliseconds" 
+			<tr ng-if="!dataset.state.isParsing"
+				ng-repeat="log in kernelLogTableParams.data track by log.id+log.miliseconds" 
 				ng-class="getRowClass(log)" 
                 disabledng-mousedown="mouseDown(event)"
                 disabledng-mouseup  ="mouseUp(log)"

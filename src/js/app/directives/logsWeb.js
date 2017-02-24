@@ -228,6 +228,7 @@
 				);
 
 				// watch data source for any changes
+				/*
 				$rootScope.$watch('dataset.logs.web', function () {
 					// update dataset view on delay
 					$timeout(function(){
@@ -237,11 +238,21 @@
 							dataset: $rootScope.dataset.logs.web
 						});
 						self.webLogTableParams.reload();
-						
 						//debugger;
 					}, 300)
-					
-					
+				});//*/
+				
+				$scope.$on('dataset.web.added', function(){
+					//console.log("handle added dataset");
+					$timeout(function(){
+						//debugger;
+						//console.log("reloading table data")
+						self.webLogTableParams.settings({
+							dataset: $rootScope.dataset.logs.web
+						});
+						self.webLogTableParams.reload();
+						//debugger;
+					}, 100);
 				});
 
 			}],
