@@ -1,5 +1,5 @@
-angular.module('inspectLogWebCtrl', [])//'confirm'
-	.controller('inspectLogWebCtrl', ['$scope', '$uibModalInstance', 'log', '$timeout', '$document', 'Data', '$rootScope', function ($scope, $uibModalInstance, log, $timeout, $document, Data, $rootScope) {
+angular.module('inspectLogKernelCtrl', [])//'confirm'
+	.controller('inspectLogKernelCtrl', ['$scope', '$uibModalInstance', 'log', '$timeout', '$document', 'Data', '$rootScope', function ($scope, $uibModalInstance, log, $timeout, $document, Data, $rootScope) {
 	    var self = $scope;				
         
 		self.log = log;//direct reference instead of clone
@@ -36,7 +36,7 @@ angular.module('inspectLogWebCtrl', [])//'confirm'
             //37 = left key
             //39 = right key
             if (event.keyCode === EnumKeys.left) {
-                if(self.log.id != ($rootScope.dataset.logs.web.length - 1)){//last element is actually 1 before total element count due to array notation
+                if(self.log.id != ($rootScope.dataset.logs.kernel.length - 1)){//last element is actually 1 before total element count due to array notation
                    // debugger;
                     console.log("moved left: ",self.log);
                     self.navigateTo("previous");
@@ -57,40 +57,7 @@ angular.module('inspectLogWebCtrl', [])//'confirm'
         
         var EVENT_TYPES = "keydown keypress"
         $document.bind(EVENT_TYPES, eventHandler);
-        
-		// catch modal close actions and add warning with possibility to cancel
-		self.$on('modal.closing', function(event, reason, closed) {
-			var message = "You are about to leave the edit view. Uncaught reason. Are you sure?";
-
-			if(typeof reason === 'object' && reason.action === 'save'){
-				message = "Save changes?";
-			}
-			else switch (reason){
-				// clicked outside
-				case "backdrop click":
-					message = "Any changes will be lost, are you sure?";
-					break;
-				
-				// cancel button
-				case "cancel":
-					message = "Any changes will be lost, are you sure?";
-					break;
-				
-				// escape key
-				case "escape key press":
-					message = "Any changes will be lost, are you sure?";
-					break;
-					
-				default:
-					console.log('modal.closing: ' + (closed ? 'close' : 'dismiss') + '(' + reason + ')');
-					break;
-			}
-            /*
-			if (!confirm(message)) {
-				event.preventDefault();
-			}//*/
-		});
-			  
+        	  
 		self.autoExpand = function(e) {
 			var element = typeof e === 'object' ? e.target : document.getElementById(e);
 	        //element.style.height = 'auto';

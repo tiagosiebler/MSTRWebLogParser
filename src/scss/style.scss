@@ -46,7 +46,7 @@
 .bouncein.ng-hide-remove,
 .bounceout.ng-hide-add.ng-hide-add-active {
   opacity: 0;
-  animation:1.5s hinge ease;
+  animation:1.5s zoomOutUp ease;
   display: block !important;
 }
 
@@ -253,4 +253,8 @@ html, body {
 
 .dragging .grip{
 	background-color:lightgreen;
+}
+
+.keepFront{
+	z-index: 1;
 }

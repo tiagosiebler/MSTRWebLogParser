@@ -1,20 +1,29 @@
 (function() {	
-    angular.module('myApp', ['startform','logsWeb','ngAnimate','ngProgress','Data'])
+    angular.module('myApp', ['startform','ngAnimate','ngProgress','Data','logsWeb','logsKernel'])
 	//add cookies back in ,'ngCookies'
 	
 	.run(function($http,$rootScope,$uibModal,ngProgressFactory,Data) {		
         $rootScope.authenticated = true;
         $rootScope.authToken = "test";
 		$rootScope.startField = "test";		
-        $rootScope.data = new Array();
         
 		$rootScope.getLocation = function(){
-			return 'MSTR Web Log Parser'
+			return 'MSTR Log Parser'
 		}
-		$rootScope.doReset = function () {
-            //delete($rootScope.data);
-	        $rootScope.data = new Array();
-	    }
+		$rootScope.getErrorCSS = function(error){
+			if(!error)
+				return 'alert-danger';
+			
+			//{error.status == 'Warning' ? ''alert-warning' : 'alert-danger'}
+			if(error.status == 'Warning')
+				return 'alert-warning';
+			else
+				return 'alert-danger';
+		}
+		$rootScope.doReset = function(){
+			$rootScope.totalData = 0;
+			return Data.resetLogs();
+		};
         $rootScope.viewHelp = function(){
              var modalInstance = $uibModal.open({
                 animation: true,
@@ -22,13 +31,35 @@
                 size: 'lg',
             });
         }
+
+		$rootScope.totalData = 0;
+		$rootScope.dataset = {
+			//these will hold the data processed by the parser
+	    	logs:{
+	    		web: new Array(),
+				kernel: new Array(),
+				iserver: new Array(),
+				skipped: new Array(),
+	    	},
+			indexes:{
+				web: 0,
+				kernel: 0,
+				iserver: 0,
+				skipped: 0,
+			},
+			//hold the state of the parser, whether it's still processing incoming data
+			state:{
+				isParsing: false,//processing uploaded file
+				uploading: false,//uploading
+				filesParsing: 0,
+				filesParsed: 0,
+			}
+	    };
 		$rootScope.isParsing = function(){
-			if(typeof(Data) == 'undefined') return false;
-			return Data.isParsing();
+			return $rootScope.dataset.state.isParsing;
 		};
 		$rootScope.isUploading = function(){
-			if(typeof(Data) == 'undefined') return false;
-			return Data.isUploading();
+			return $rootScope.dataset.state.isUploading;
 		};
 		
 		// link any monitoring vars to rootScope, so they're accessible from the DOM scope

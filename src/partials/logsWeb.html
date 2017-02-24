@@ -1,8 +1,8 @@
-<div class="panel panel-default">
+<div class="panel panel-default" ng-show="dataset.logs.web.length != 0" class="flipin flipout">
 	<!-- Default panel contents -->	
 	<div class="panel-heading clearfix">
-		<b>MSTR Web Logs - ({{data.length}} loaded) </b>
-		<b ng-show="tableParams.hasFilter()">- (Filtered results: {{tableParams.total()}})</b>
+		<b>MSTR Web Logs - ({{dataset.logs.web.length - 1}} loaded) </b>
+		<b ng-show="tableParams.hasFilter()">- (Filtered results: {{tableParams.total() - 1}})</b>
 		<div class="btn-group pull-right">
 			<button class="btn btn-default btn-xs" ng-click="enableResize()" ng-class="{'active': resize}"><span class="glyphicon glyphicon-resize-horizontal"></span> Resize</button>	
 			<button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter" ng-class="{'active': showFilter}"><span class="glyphicon glyphicon-filter"></span> Search</button>	
@@ -10,7 +10,7 @@
 		</div>
 	</div>
 	<div class="table table-responsive logTable">
-		<table ng-table="tableParams" id="ngTable" class="table table-condensed logTable" show-filter="showFilter" ng-table-columns-binding="columns">
+		<table ng-table="webLogTableParams" id="ngTableWebLogs" class="table table-condensed logTable" show-filter="showFilter" ng-table-columns-binding="columns">
 			
 			<!--<tr>
 				<th>Package</th>
@@ -28,7 +28,7 @@
 		log.exception.textLength
 				-->
 				<!-- info: log.level== 'MESSAGE', warning: log.level== 'SEVERE' text-primary  table-striped table-hover -->
-			<tr ng-repeat="log in $data track by log.id+log.miliseconds" ng-class="{'bg-primary': log.isSelected}" 
+			<tr ng-repeat="log in webLogTableParams.data track by log.id+log.miliseconds" ng-class="{'bg-primary': log.isSelected}" 
                 disabledng-mousedown="mouseDown(event)"
                 disabledng-mouseup  ="mouseUp(log)"
                 disabledsglclick="mouseUp(log)"

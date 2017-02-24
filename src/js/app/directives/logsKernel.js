@@ -1,10 +1,10 @@
 (function () {
-    angular.module('logsWeb', ['ngTable','ui.bootstrap','inspectLogWebCtrl'])
+    angular.module('logsKernel', ['ngTable','ui.bootstrap','JSONfilter','inspectLogKernelCtrl'])
 
-    .directive('logsweb', function() {
+    .directive('logskernel', function() {
         return {
             restrict: 'E',
-            templateUrl: 'partials/logsWeb.html',
+            templateUrl: 'partials/logsKernel.html',
 			link: function (scope, element, attrs) {
 				
 			},
@@ -12,9 +12,9 @@
 			    var self = $scope;				
 
 				self.total = {};
-				self.paginationWeb = {};
-				self.paginationWeb.currentPage = 1;
-				self.paginationWeb.perPage = 50;
+				self.pagination = {};
+				self.pagination.currentPage = 1;
+				self.pagination.perPage = 50;
 
 				self.debug = function(param){
 					debugger;
@@ -36,7 +36,7 @@
                         //console.log("Must have dragged");
                         return false;
                     }else{
-                        self.view(log);
+                        self.viewKernelMessage(log);
                     }
                 };
                 self.mouseMove = function(event){
@@ -44,7 +44,7 @@
                     self.dragging = true;
                 };
                 self.dblClick = function($event){
-                    //console.log("double click");
+                    console.log("double click");
                     //$event.preventDefault();
                     //$event.stopPropagation();
 					
@@ -53,19 +53,39 @@
 					$event.preventDefault();
 					$event.stopPropagation();
 				}
+				
+				self.containsError = function(param){
+					if(typeof param.XMLActionName == 'undefined') return false;
+					
+					if(param.XMLActionName.indexOf("failed") !== -1)
+						return true;
+					
+					return false;
+				}
+				self.getRowClass = function(row){
+					// mark rows differently if they have an error.
+					if(this.containsError(row)){	
+						if(row.isSelected)
+							return "bg-danger";
+						else
+							return "bg-warning";
+						
+					}else if(row.isSelected)
+						return "bg-primary";
+				}
 
 				// Enable resize
 				self.resize = false;
 				self.enableResize = function () {
 					if (self.resize) {
 						console.log("disabling resize");
-						$("#ngTableWebLogs").colResizable({
+						$("#ngTableKernelLogs").colResizable({
 							disable: true
 						});
 						self.resize = false;
 					} else {
 						console.log("enabling resize");
-						$("#ngTableWebLogs").colResizable({
+						$("#ngTableKernelLogs").colResizable({
 							fixed: false,
 							liveDrag: true,
 							resizeMode: 'overflow',
@@ -76,57 +96,26 @@
 					}
 				};
                 
-				//esvit/ng-table/issues/189
-				/*
-			    self.columns = [
-					{ field: "LID", 		title: "LID", 			show: true },
-					{ field: "Package", 	title: "Package", 		show: true },
-					{ field: "Level", 		title: "Level", 		show: true },
-					{ field: "Milliseconds", title: "Milliseconds",	show: true },
-					{ field: "TimeStamp", 	title: "TimeStamp", 	show: true },
-					{ field: "Thread", 		title: "Thread", 		show: true },
-					{ field: "Class", 		title: "Class", 		show: true },
-					{ field: "Method", 		title: "Method", 		show: true },
-					{ field: "Exception", 	title: "Exception", 	show: true },
-					{ field: "Others", 		title: "Others", 		show: true },
-			    ];//*/
-				
 				self.columns = {
 					"LID": {"title": "Reference ID of log message within log file. Higher numbers are more recent messages."},
 					"Package": {"title": "Package Name"},
+					"XMLCommand": {"title": "Contents of <st><sst><st><cmd> within the raw XML"}
 				};
 
 				// delete a row from the dataset
 			    self.del = function(row) {
-					_.remove(self.webLogTableParams.settings().dataset, function(item) {
+					_.remove(self.kernelLogTableParams.settings().dataset, function(item) {
 						return row === item;
 					});
 
-					self.webLogTableParams.reload().then(function(data) {
-						if ($rootScope.dataset.logs.web.length === 0 && self.webLogTableParams.total() > 0) {
-							self.webLogTableParams.page(self.webLogTableParams.page() - 1);
-							self.webLogTableParams.reload();
+					self.kernelLogTableParams.reload().then(function(data) {
+						if ($rootScope.dataset.logs.kernel.length === 0 && self.kernelLogTableParams.total() > 0) {
+							self.kernelLogTableParams.page(self.kernelLogTableParams.page() - 1);
+							self.kernelLogTableParams.reload();
 						}
 					});
 				}
 				
-				// create a popup with contents of param, deprecated in favour of bootstrap modals
-				self.alert = function(param){
-					//alert(param);
-					var html = document.createElement('html');
-					var body = document.createElement('body');
-					var pre = document.createElement('pre');
-					
-					html.appendChild(body);
-					body.appendChild(pre);
-					pre.appendChild(document.createTextNode(param));
-					
-					var x=window.open('','_blank', 'toolbar=0,location=0,menubar=0,height=500,width=1400');
-						x.document.open();
-						x.document.write(html.innerHTML);
-						x.document.close();
-				}
-                
 				//Highlight row on click
 				self.isSelected = [];
 				self.toggleSelection = function (log) {
@@ -135,12 +124,12 @@
 				}
 
                 // open modal to display full log in scrollable subview
-                self.view = function(log){
+                self.viewKernelMessage = function(log){
                     // open a modal view of that log message
                     var modalInstance = $uibModal.open({
 						animation: true,
-						templateUrl: 'partials/sub/inspectLogWeb.html',
-						controller: 'inspectLogWebCtrl',
+						templateUrl: 'partials/sub/inspectLogKernel.html',
+						controller: 'inspectLogKernelCtrl',
 						size: 'lg',
             			windowClass: 'app-modal-window',
 						resolve: {
@@ -160,7 +149,7 @@
                             nextID = result.data + 1;
                         }
                         //todo this doesn't work when sort order is changed
-                        self.view($rootScope.dataset.logs.web[nextID]);
+                        self.view($rootScope.dataset.logs.kernel[nextID]);
                     }, function () {
 						//console.log('Modal dismissed at: ' + new Date());
 						}
@@ -173,33 +162,35 @@
                 }
 
 				self.filters = {
-		            package: '',
-					level: '',
-					miliseconds: '',
-					timestamp: '',
-					thread: '',
-					class: '',
-					method: '',
-					message: '',
-					exception: '',
-					others: ''
+					date: 			'',
+					time: 			'',
+					
+					host:  			'',
+					pid: 			'',
+					thread: 		'',
+					
+					XMLActionName: 	'',//XML Command, XML GetFolderID, etc
+					XMLDetails: 	'',//other details, if not xml string
+					XMLRaw: 		'',//xml
+					XMLCommand: 	'',//xml.st.sst.st.cmd
 	        	};
-				
-				//>>>>>>> web log is empty for some reason, when uploading more than one file? ng-repeat brings no results
-			    self.webLogTableParams = new NgTableParams({
-				        page: self.paginationWeb.currentPage,            // show first page
-				        count: self.paginationWeb.perPage,           // count per page
+
+			    self.kernelLogTableParams = new NgTableParams({
+				        page: self.pagination.currentPage,            // show first page
+				        count: self.pagination.perPage,           // count per page
 				        sorting: { 
-	                        id: 'desc',
-				            package: '',
-							level: '',
-							miliseconds: '',
-							timestamp: '',
-							thread: '',
-							class: '',
-							method: '',
-							message: '',
-							exception: ''
+							id: 			'desc',
+							date: 			'',
+							time: 			'',
+					
+							host:  			'',
+							pid: 			'',
+							thread: 		'',
+					
+							XMLActionName: 	'',//XML Command, XML GetFolderID, etc
+							XMLDetails: 	'',//other details, if not xml string
+							XMLRaw: 		'',//xml
+							XMLCommand: 	'',//xml.st.sst.st.cmd
 						},
 				        filter: self.filters,
 				    }, 
@@ -209,7 +200,7 @@
 						filterOptions: {
 							filterDelay: 200
 						},
-						dataset: $rootScope.dataset.logs.web,
+						dataset: $rootScope.dataset.logs.kernel,
 						/*
 						getData: function(params) {
 				            var orderedData = params.sorting() ? $filter('orderBy')($scope.completedQueries, params.orderBy()) : data;
@@ -219,7 +210,7 @@
 				        }
 						getData: function(params){
 						    // method to do custom filtering etc of data
-						    return $rootScope.dataset.logs.web;
+						    return $rootScope.dataset.logs.kernel;
 					
 					
 						},//*/
@@ -228,24 +219,23 @@
 				);
 
 				// watch data source for any changes
-				$rootScope.$watch('dataset.logs.web', function () {
+				$rootScope.$watch('dataset.logs.kernel', function () {
 					// update dataset view on delay
 					$timeout(function(){
 						//debugger;
 						//console.log("reloading table data")
-						self.webLogTableParams.settings({
-							dataset: $rootScope.dataset.logs.web
+						self.kernelLogTableParams.settings({
+							dataset: $rootScope.dataset.logs.kernel
 						});
-						self.webLogTableParams.reload();
+						self.kernelLogTableParams.reload();
 						
-						//debugger;
 					}, 300)
 					
 					
 				});
 
 			}],
-			controllerAs: 'logsWebCtrl'
+			controllerAs: 'logsKernelCtrl'
         };
     });
 })();
