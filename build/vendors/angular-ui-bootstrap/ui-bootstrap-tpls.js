@@ -2,7 +2,7 @@
  * angular-ui-bootstrap
  * http://angular-ui.github.io/bootstrap/
 
- * Version: 2.4.0 - 2016-12-29
+ * Version: 2.5.6 - 2017-10-14
  * License: MIT
  */angular.module("ui.bootstrap", ["ui.bootstrap.tpls", "ui.bootstrap.collapse","ui.bootstrap.tabindex","ui.bootstrap.accordion","ui.bootstrap.alert","ui.bootstrap.buttons","ui.bootstrap.carousel","ui.bootstrap.dateparser","ui.bootstrap.isClass","ui.bootstrap.datepicker","ui.bootstrap.position","ui.bootstrap.datepickerPopup","ui.bootstrap.debounce","ui.bootstrap.multiMap","ui.bootstrap.dropdown","ui.bootstrap.stackedMap","ui.bootstrap.modal","ui.bootstrap.paging","ui.bootstrap.pager","ui.bootstrap.pagination","ui.bootstrap.tooltip","ui.bootstrap.popover","ui.bootstrap.progressbar","ui.bootstrap.rating","ui.bootstrap.tabs","ui.bootstrap.timepicker","ui.bootstrap.typeahead"]);
 angular.module("ui.bootstrap.tpls", ["uib/template/accordion/accordion-group.html","uib/template/accordion/accordion.html","uib/template/alert/alert.html","uib/template/carousel/carousel.html","uib/template/carousel/slide.html","uib/template/datepicker/datepicker.html","uib/template/datepicker/day.html","uib/template/datepicker/month.html","uib/template/datepicker/year.html","uib/template/datepickerPopup/popup.html","uib/template/modal/window.html","uib/template/pager/pager.html","uib/template/pagination/pagination.html","uib/template/tooltip/tooltip-html-popup.html","uib/template/tooltip/tooltip-popup.html","uib/template/tooltip/tooltip-template-popup.html","uib/template/popover/popover-html.html","uib/template/popover/popover-template.html","uib/template/popover/popover.html","uib/template/progressbar/bar.html","uib/template/progressbar/progress.html","uib/template/progressbar/progressbar.html","uib/template/rating/rating.html","uib/template/tabs/tab.html","uib/template/tabs/tabset.html","uib/template/timepicker/timepicker.html","uib/template/typeahead/typeahead-match.html","uib/template/typeahead/typeahead-popup.html"]);
@@ -80,7 +80,7 @@ angular.module('ui.bootstrap.collapse', [])
                   to: getScrollFromElement(element[0])
                 }).then(expandDone);
               }
-            });
+            }, angular.noop);
         }
 
         function expandDone() {
@@ -119,7 +119,7 @@ angular.module('ui.bootstrap.collapse', [])
                   to: cssTo
                 }).then(collapseDone);
               }
-            });
+            }, angular.noop);
         }
 
         function collapseDone() {
@@ -436,7 +436,7 @@ angular.module('ui.bootstrap.carousel', [])
     slides = self.slides = $scope.slides = [],
     SLIDE_DIRECTION = 'uib-slideDirection',
     currentIndex = $scope.active,
-    currentInterval, isPlaying, bufferedTransitions = [];
+    currentInterval, isPlaying;
 
   var destroyed = false;
   $element.addClass('carousel');
@@ -498,11 +498,6 @@ angular.module('ui.bootstrap.carousel', [])
   self.removeSlide = function(slide) {
     var index = findSlideIndex(slide);
 
-    var bufferedIndex = bufferedTransitions.indexOf(slides[index]);
-    if (bufferedIndex !== -1) {
-      bufferedTransitions.splice(bufferedIndex, 1);
-    }
-
     //get the index of the slide inside the carousel
     slides.splice(index, 1);
     if (slides.length > 0 && currentIndex === index) {
@@ -526,7 +521,6 @@ angular.module('ui.bootstrap.carousel', [])
     if (slides.length === 0) {
       currentIndex = null;
       $scope.active = null;
-      clearBufferedTransitions();
     }
   };
 
@@ -541,8 +535,6 @@ angular.module('ui.bootstrap.carousel', [])
     if (nextSlide.slide.index !== currentIndex &&
       !$scope.$currentTransition) {
       goNext(nextSlide.slide, nextIndex, direction);
-    } else if (nextSlide && nextSlide.slide.index !== currentIndex && $scope.$currentTransition) {
-      bufferedTransitions.push(slides[nextIndex]);
     }
   };
 
@@ -611,12 +603,6 @@ angular.module('ui.bootstrap.carousel', [])
     }
   });
 
-  function clearBufferedTransitions() {
-    while (bufferedTransitions.length) {
-      bufferedTransitions.shift();
-    }
-  }
-
   function getSlideByIndex(index) {
     for (var i = 0, l = slides.length; i < l; ++i) {
       if (slides[i].index === index) {
@@ -652,14 +638,6 @@ angular.module('ui.bootstrap.carousel', [])
         if (phase === 'close') {
           $scope.$currentTransition = null;
           $animate.off('addClass', element);
-          if (bufferedTransitions.length) {
-            var nextSlide = bufferedTransitions.pop().slide;
-            var nextIndex = nextSlide.index;
-            var nextDirection = nextIndex > self.getCurrentIndex() ? 'next' : 'prev';
-            clearBufferedTransitions();
-
-            goNext(nextSlide, nextIndex, nextDirection);
-          }
         }
       });
     }
@@ -690,7 +668,6 @@ angular.module('ui.bootstrap.carousel', [])
   function resetTransition(slides) {
     if (!slides.length) {
       $scope.$currentTransition = null;
-      clearBufferedTransitions();
     }
   }
 
@@ -1552,7 +1529,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
         $scope.$watch('datepickerOptions.' + key, function(value) {
           if (value) {
             if (angular.isDate(value)) {
-              self[key] = dateParser.fromTimezone(new Date(value), ngModelOptions.timezone);
+              self[key] = dateParser.fromTimezone(new Date(value), ngModelOptions.getOption('timezone'));
             } else {
               if ($datepickerLiteralWarning) {
                 $log.warn('Literal date support has been deprecated, please switch to date object usage');
@@ -1562,7 +1539,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
             }
           } else {
             self[key] = datepickerConfig[key] ?
-              dateParser.fromTimezone(new Date(datepickerConfig[key]), ngModelOptions.timezone) :
+              dateParser.fromTimezone(new Date(datepickerConfig[key]), ngModelOptions.getOption('timezone')) :
               null;
           }
 
@@ -1609,14 +1586,13 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
 
   this.init = function(ngModelCtrl_) {
     ngModelCtrl = ngModelCtrl_;
-    ngModelOptions = ngModelCtrl_.$options ||
-      $scope.datepickerOptions.ngModelOptions ||
-      datepickerConfig.ngModelOptions;
+    ngModelOptions = extractOptions(ngModelCtrl);
+
     if ($scope.datepickerOptions.initDate) {
-      self.activeDate = dateParser.fromTimezone($scope.datepickerOptions.initDate, ngModelOptions.timezone) || new Date();
+      self.activeDate = dateParser.fromTimezone($scope.datepickerOptions.initDate, ngModelOptions.getOption('timezone')) || new Date();
       $scope.$watch('datepickerOptions.initDate', function(initDate) {
         if (initDate && (ngModelCtrl.$isEmpty(ngModelCtrl.$modelValue) || ngModelCtrl.$invalid)) {
-          self.activeDate = dateParser.fromTimezone(initDate, ngModelOptions.timezone);
+          self.activeDate = dateParser.fromTimezone(initDate, ngModelOptions.getOption('timezone'));
           self.refreshView();
         }
       });
@@ -1626,8 +1602,8 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
 
     var date = ngModelCtrl.$modelValue ? new Date(ngModelCtrl.$modelValue) : new Date();
     this.activeDate = !isNaN(date) ?
-      dateParser.fromTimezone(date, ngModelOptions.timezone) :
-      dateParser.fromTimezone(new Date(), ngModelOptions.timezone);
+      dateParser.fromTimezone(date, ngModelOptions.getOption('timezone')) :
+      dateParser.fromTimezone(new Date(), ngModelOptions.getOption('timezone'));
 
     ngModelCtrl.$render = function() {
       self.render();
@@ -1640,7 +1616,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
           isValid = !isNaN(date);
 
       if (isValid) {
-        this.activeDate = dateParser.fromTimezone(date, ngModelOptions.timezone);
+        this.activeDate = dateParser.fromTimezone(date, ngModelOptions.getOption('timezone'));
       } else if (!$datepickerSuppressError) {
         $log.error('Datepicker directive: "ng-model" value must be a Date object');
       }
@@ -1657,7 +1633,7 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
       }
 
       var date = ngModelCtrl.$viewValue ? new Date(ngModelCtrl.$viewValue) : null;
-      date = dateParser.fromTimezone(date, ngModelOptions.timezone);
+      date = dateParser.fromTimezone(date, ngModelOptions.getOption('timezone'));
       ngModelCtrl.$setValidity('dateDisabled', !date ||
         this.element && !this.isDisabled(date));
     }
@@ -1665,9 +1641,9 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
 
   this.createDateObject = function(date, format) {
     var model = ngModelCtrl.$viewValue ? new Date(ngModelCtrl.$viewValue) : null;
-    model = dateParser.fromTimezone(model, ngModelOptions.timezone);
+    model = dateParser.fromTimezone(model, ngModelOptions.getOption('timezone'));
     var today = new Date();
-    today = dateParser.fromTimezone(today, ngModelOptions.timezone);
+    today = dateParser.fromTimezone(today, ngModelOptions.getOption('timezone'));
     var time = this.compare(date, today);
     var dt = {
       date: date,
@@ -1713,9 +1689,9 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
 
   $scope.select = function(date) {
     if ($scope.datepickerMode === self.minMode) {
-      var dt = ngModelCtrl.$viewValue ? dateParser.fromTimezone(new Date(ngModelCtrl.$viewValue), ngModelOptions.timezone) : new Date(0, 0, 0, 0, 0, 0, 0);
+      var dt = ngModelCtrl.$viewValue ? dateParser.fromTimezone(new Date(ngModelCtrl.$viewValue), ngModelOptions.getOption('timezone')) : new Date(0, 0, 0, 0, 0, 0, 0);
       dt.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
-      dt = dateParser.toTimezone(dt, ngModelOptions.timezone);
+      dt = dateParser.toTimezone(dt, ngModelOptions.getOption('timezone'));
       ngModelCtrl.$setViewValue(dt);
       ngModelCtrl.$render();
     } else {
@@ -1799,6 +1775,37 @@ angular.module('ui.bootstrap.datepicker', ['ui.bootstrap.dateparser', 'ui.bootst
   function setMode(mode) {
     $scope.datepickerMode = mode;
     $scope.datepickerOptions.datepickerMode = mode;
+  }
+
+  function extractOptions(ngModelCtrl) {
+    var ngModelOptions;
+
+    if (angular.version.minor < 6) { // in angular < 1.6 $options could be missing
+      // guarantee a value
+      ngModelOptions = ngModelCtrl.$options ||
+        $scope.datepickerOptions.ngModelOptions ||
+        datepickerConfig.ngModelOptions ||
+        {};
+
+      // mimic 1.6+ api
+      ngModelOptions.getOption = function (key) {
+        return ngModelOptions[key];
+      };
+    } else { // in angular >=1.6 $options is always present
+      // ng-model-options defaults timezone to null; don't let its precedence squash a non-null value
+      var timezone = ngModelCtrl.$options.getOption('timezone') ||
+        ($scope.datepickerOptions.ngModelOptions ? $scope.datepickerOptions.ngModelOptions.timezone : null) ||
+        (datepickerConfig.ngModelOptions ? datepickerConfig.ngModelOptions.timezone : null);
+
+      // values passed to createChild override existing values
+      ngModelOptions = ngModelCtrl.$options // start with a ModelOptions instance
+        .createChild(datepickerConfig.ngModelOptions) // lowest precedence
+        .createChild($scope.datepickerOptions.ngModelOptions)
+        .createChild(ngModelCtrl.$options) // highest precedence
+        .createChild({timezone: timezone}); // to keep from squashing a non-null value
+    }
+
+    return ngModelOptions;
   }
 }])
 
@@ -2757,11 +2764,7 @@ function($scope, $element, $attrs, $compile, $log, $parse, $window, $document, $
 
   this.init = function(_ngModel_) {
     ngModel = _ngModel_;
-    ngModelOptions = angular.isObject(_ngModel_.$options) ?
-      _ngModel_.$options :
-      {
-        timezone: null
-      };
+    ngModelOptions = extractOptions(ngModel);
     closeOnDateSelection = angular.isDefined($attrs.closeOnDateSelection) ?
       $scope.$parent.$eval($attrs.closeOnDateSelection) :
       datepickerPopupConfig.closeOnDateSelection;
@@ -2852,13 +2855,13 @@ function($scope, $element, $attrs, $compile, $log, $parse, $window, $document, $
           value = new Date(value);
         }
 
-        $scope.date = dateParser.fromTimezone(value, ngModelOptions.timezone);
+        $scope.date = dateParser.fromTimezone(value, ngModelOptions.getOption('timezone'));
 
         return dateParser.filter($scope.date, dateFormat);
       });
     } else {
       ngModel.$formatters.push(function(value) {
-        $scope.date = dateParser.fromTimezone(value, ngModelOptions.timezone);
+        $scope.date = dateParser.fromTimezone(value, ngModelOptions.getOption('timezone'));
         return value;
       });
     }
@@ -2910,7 +2913,7 @@ function($scope, $element, $attrs, $compile, $log, $parse, $window, $document, $
 
   $scope.isDisabled = function(date) {
     if (date === 'today') {
-      date = dateParser.fromTimezone(new Date(), ngModelOptions.timezone);
+      date = dateParser.fromTimezone(new Date(), ngModelOptions.getOption('timezone'));
     }
 
     var dates = {};
@@ -2967,7 +2970,7 @@ function($scope, $element, $attrs, $compile, $log, $parse, $window, $document, $
         date = new Date($scope.date);
         date.setFullYear(today.getFullYear(), today.getMonth(), today.getDate());
       } else {
-        date = dateParser.fromTimezone(today, ngModelOptions.timezone);
+        date = dateParser.fromTimezone(today, ngModelOptions.getOption('timezone'));
         date.setHours(0, 0, 0, 0);
       }
     }
@@ -3058,11 +3061,11 @@ function($scope, $element, $attrs, $compile, $log, $parse, $window, $document, $
     if (angular.isString(viewValue)) {
       var date = parseDateString(viewValue);
       if (!isNaN(date)) {
-        return dateParser.toTimezone(date, ngModelOptions.timezone);
+        return dateParser.toTimezone(date, ngModelOptions.getOption('timezone'));
       }
     }
 
-    return ngModel.$options && ngModel.$options.allowInvalid ? viewValue : undefined;
+    return ngModelOptions.getOption('allowInvalid') ? viewValue : undefined;
   }
 
   function validator(modelValue, viewValue) {
@@ -3135,6 +3138,28 @@ function($scope, $element, $attrs, $compile, $log, $parse, $window, $document, $
         dpElement.removeClass('uib-position-measure');
       }
     }
+  }
+
+  function extractOptions(ngModelCtrl) {
+    var ngModelOptions;
+
+    if (angular.version.minor < 6) { // in angular < 1.6 $options could be missing
+      // guarantee a value
+      ngModelOptions = angular.isObject(ngModelCtrl.$options) ?
+        ngModelCtrl.$options :
+        {
+          timezone: null
+        };
+
+      // mimic 1.6+ api
+      ngModelOptions.getOption = function (key) {
+        return ngModelOptions[key];
+      };
+    } else { // in angular >=1.6 $options is always present
+      ngModelOptions = ngModelCtrl.$options;
+    }
+
+    return ngModelOptions;
   }
 
   $scope.$on('uib:datepicker.mode', function() {
@@ -3340,7 +3365,7 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.multiMap', 'ui.bootstrap.
   var closeDropdown = function(evt) {
     // This method may still be called during the same mouse event that
     // unbound this event handler. So check openScope before proceeding.
-    if (!openScope) { return; }
+    if (!openScope || !openScope.isOpen) { return; }
 
     if (evt && openScope.getAutoClose() === 'disabled') { return; }
 
@@ -3396,8 +3421,6 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.multiMap', 'ui.bootstrap.
     getIsOpen,
     setIsOpen = angular.noop,
     toggleInvoker = $attrs.onToggle ? $parse($attrs.onToggle) : angular.noop,
-    appendToBody = false,
-    appendTo = null,
     keynavEnabled = false,
     selectedOption = null,
     body = $document.find('body');
@@ -3414,26 +3437,7 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.multiMap', 'ui.bootstrap.
       });
     }
 
-    if (angular.isDefined($attrs.dropdownAppendTo)) {
-      var appendToEl = $parse($attrs.dropdownAppendTo)(scope);
-      if (appendToEl) {
-        appendTo = angular.element(appendToEl);
-      }
-    }
-
-    appendToBody = angular.isDefined($attrs.dropdownAppendToBody);
     keynavEnabled = angular.isDefined($attrs.keyboardNav);
-
-    if (appendToBody && !appendTo) {
-      appendTo = body;
-    }
-
-    if (appendTo && self.dropdownMenu) {
-      appendTo.append(self.dropdownMenu);
-      $element.on('$destroy', function handleDestroyEvent() {
-        self.dropdownMenu.remove();
-      });
-    }
   };
 
   this.toggle = function(open) {
@@ -3505,7 +3509,42 @@ angular.module('ui.bootstrap.dropdown', ['ui.bootstrap.multiMap', 'ui.bootstrap.
     }
   };
 
+  function removeDropdownMenu() {
+    $element.append(self.dropdownMenu);
+  }
+
   scope.$watch('isOpen', function(isOpen, wasOpen) {
+    var appendTo = null,
+      appendToBody = false;
+
+    if (angular.isDefined($attrs.dropdownAppendTo)) {
+      var appendToEl = $parse($attrs.dropdownAppendTo)(scope);
+      if (appendToEl) {
+        appendTo = angular.element(appendToEl);
+      }
+    }
+
+    if (angular.isDefined($attrs.dropdownAppendToBody)) {
+      var appendToBodyValue = $parse($attrs.dropdownAppendToBody)(scope);
+      if (appendToBodyValue !== false) {
+        appendToBody = true;
+      }
+    }
+
+    if (appendToBody && !appendTo) {
+      appendTo = body;
+    }
+
+    if (appendTo && self.dropdownMenu) {
+      if (isOpen) {
+        appendTo.append(self.dropdownMenu);
+        $element.on('$destroy', removeDropdownMenu);
+      } else {
+        $element.off('$destroy', removeDropdownMenu);
+        removeDropdownMenu();
+      }
+    }
+
     if (appendTo && self.dropdownMenu) {
       var pos = $position.positionElements($element, self.dropdownMenu, 'bottom-left', true),
         css,
@@ -4152,10 +4191,6 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.multiMap', 'ui.bootstrap.sta
         var appendToElement = modal.appendTo,
             currBackdropIndex = backdropIndex();
 
-        if (!appendToElement.length) {
-          throw new Error('appendTo element not found. Make sure that the element passed is in DOM.');
-        }
-
         if (currBackdropIndex >= 0 && !backdropDomEl) {
           backdropScope = $rootScope.$new(true);
           backdropScope.modalOptions = modal;
@@ -4431,6 +4466,10 @@ angular.module('ui.bootstrap.modal', ['ui.bootstrap.multiMap', 'ui.bootstrap.sta
             modalOptions = angular.extend({}, $modalProvider.options, modalOptions);
             modalOptions.resolve = modalOptions.resolve || {};
             modalOptions.appendTo = modalOptions.appendTo || $document.find('body').eq(0);
+
+            if (!modalOptions.appendTo.length) {
+              throw new Error('appendTo element not found. Make sure that the element passed is in DOM.');
+            }
 
             //verify options
             if (!modalOptions.component && !modalOptions.template && !modalOptions.templateUrl) {
@@ -4709,6 +4748,7 @@ angular.module('ui.bootstrap.pagination', ['ui.bootstrap.paging', 'ui.bootstrap.
     pageLabel = angular.isDefined($attrs.pageLabel) ? function(idx) { return $scope.$parent.$eval($attrs.pageLabel, {$page: idx}); } : angular.identity;
   $scope.boundaryLinks = angular.isDefined($attrs.boundaryLinks) ? $scope.$parent.$eval($attrs.boundaryLinks) : uibPaginationConfig.boundaryLinks;
   $scope.directionLinks = angular.isDefined($attrs.directionLinks) ? $scope.$parent.$eval($attrs.directionLinks) : uibPaginationConfig.directionLinks;
+  $attrs.$set('role', 'menu');
 
   uibPaging.create(this, $scope, $attrs);
 
@@ -5349,6 +5389,13 @@ angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.s
               }
             }
 
+            // KeyboardEvent handler to hide the tooltip on Escape key press
+            function hideOnEscapeKey(e) {
+              if (e.which === 27) {
+                hideTooltipBind();
+              }
+            }
+
             var unregisterTriggers = function() {
               triggers.show.forEach(function(trigger) {
                 if (trigger === 'outsideClick') {
@@ -5357,6 +5404,7 @@ angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.s
                   element.off(trigger, showTooltipBind);
                   element.off(trigger, toggleTooltipBind);
                 }
+                element.off('keypress', hideOnEscapeKey);
               });
               triggers.hide.forEach(function(trigger) {
                 if (trigger === 'outsideClick') {
@@ -5396,12 +5444,7 @@ angular.module('ui.bootstrap.tooltip', ['ui.bootstrap.position', 'ui.bootstrap.s
                     element.on(trigger, showTooltipBind);
                     element.on(triggers.hide[idx], hideTooltipBind);
                   }
-
-                  element.on('keypress', function(e) {
-                    if (e.which === 27) {
-                      hideTooltipBind();
-                    }
-                  });
+                  element.on('keypress', hideOnEscapeKey);
                 });
               }
             }
@@ -6764,7 +6807,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.debounce', 'ui.bootstrap
     var invokeModelSetter = $parse(attrs.ngModel + '($$$p)');
     var $setModelValue = function(scope, newValue) {
       if (angular.isFunction(parsedModel(originalScope)) &&
-        ngModelOptions && ngModelOptions.$options && ngModelOptions.$options.getterSetter) {
+        ngModelOptions.getOption('getterSetter')) {
         return invokeModelSetter(scope, {$$$p: newValue});
       }
 
@@ -7177,11 +7220,11 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.debounce', 'ui.bootstrap
       element.after($popup);
     }
 
-    this.init = function(_modelCtrl, _ngModelOptions) {
+    this.init = function(_modelCtrl) {
       modelCtrl = _modelCtrl;
-      ngModelOptions = _ngModelOptions;
+      ngModelOptions = extractOptions(modelCtrl);
 
-      scope.debounceUpdate = modelCtrl.$options && $parse(modelCtrl.$options.debounce)(originalScope);
+      scope.debounceUpdate = $parse(ngModelOptions.getOption('debounce'))(originalScope);
 
       //plug into $parsers pipeline to open a typeahead on view changes initiated from DOM
       //$parsers kick-in on all the changes coming from the view as well as manually triggered by $setViewValue
@@ -7241,14 +7284,32 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.debounce', 'ui.bootstrap
         return candidateViewValue !== emptyViewValue ? candidateViewValue : modelValue;
       });
     };
+
+    function extractOptions(ngModelCtrl) {
+      var ngModelOptions;
+
+      if (angular.version.minor < 6) { // in angular < 1.6 $options could be missing
+        // guarantee a value
+        ngModelOptions = ngModelCtrl.$options || {};
+
+        // mimic 1.6+ api
+        ngModelOptions.getOption = function (key) {
+          return ngModelOptions[key];
+        };
+      } else { // in angular >=1.6 $options is always present
+        ngModelOptions = ngModelCtrl.$options;
+      }
+
+      return ngModelOptions;
+    }
   }])
 
   .directive('uibTypeahead', function() {
     return {
       controller: 'UibTypeaheadController',
-      require: ['ngModel', '^?ngModelOptions', 'uibTypeahead'],
+      require: ['ngModel', 'uibTypeahead'],
       link: function(originalScope, element, attrs, ctrls) {
-        ctrls[2].init(ctrls[0], ctrls[1]);
+        ctrls[1].init(ctrls[0]);
       }
     };
   })
@@ -7344,7 +7405,7 @@ angular.module('ui.bootstrap.typeahead', ['ui.bootstrap.debounce', 'ui.bootstrap
     };
   }]);
 
-angular.module("uib/template/accordion/accordion-group.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/accordion/accordion-group.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/accordion/accordion-group.html",
     "<div role=\"tab\" id=\"{{::headingId}}\" aria-selected=\"{{isOpen}}\" class=\"panel-heading\" ng-keypress=\"toggleOpen($event)\">\n" +
     "  <h4 class=\"panel-title\">\n" +
@@ -7357,12 +7418,12 @@ angular.module("uib/template/accordion/accordion-group.html", []).run(["$templat
     "");
 }]);
 
-angular.module("uib/template/accordion/accordion.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/accordion/accordion.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/accordion/accordion.html",
     "<div role=\"tablist\" class=\"panel-group\" ng-transclude></div>");
 }]);
 
-angular.module("uib/template/alert/alert.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/alert/alert.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/alert/alert.html",
     "<button ng-show=\"closeable\" type=\"button\" class=\"close\" ng-click=\"close({$event: $event})\">\n" +
     "  <span aria-hidden=\"true\">&times;</span>\n" +
@@ -7372,7 +7433,7 @@ angular.module("uib/template/alert/alert.html", []).run(["$templateCache", funct
     "");
 }]);
 
-angular.module("uib/template/carousel/carousel.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/carousel/carousel.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/carousel/carousel.html",
     "<div class=\"carousel-inner\" ng-transclude></div>\n" +
     "<a role=\"button\" href class=\"left carousel-control\" ng-click=\"prev()\" ng-class=\"{ disabled: isPrevDisabled() }\" ng-show=\"slides.length > 1\">\n" +
@@ -7391,13 +7452,13 @@ angular.module("uib/template/carousel/carousel.html", []).run(["$templateCache",
     "");
 }]);
 
-angular.module("uib/template/carousel/slide.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/carousel/slide.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/carousel/slide.html",
     "<div class=\"text-center\" ng-transclude></div>\n" +
     "");
 }]);
 
-angular.module("uib/template/datepicker/datepicker.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/datepicker/datepicker.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/datepicker/datepicker.html",
     "<div ng-switch=\"datepickerMode\">\n" +
     "  <div uib-daypicker ng-switch-when=\"day\" tabindex=\"0\" class=\"uib-daypicker\"></div>\n" +
@@ -7407,7 +7468,7 @@ angular.module("uib/template/datepicker/datepicker.html", []).run(["$templateCac
     "");
 }]);
 
-angular.module("uib/template/datepicker/day.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/datepicker/day.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/datepicker/day.html",
     "<table role=\"grid\" aria-labelledby=\"{{::uniqueId}}-title\" aria-activedescendant=\"{{activeDateId}}\">\n" +
     "  <thead>\n" +
@@ -7442,7 +7503,7 @@ angular.module("uib/template/datepicker/day.html", []).run(["$templateCache", fu
     "");
 }]);
 
-angular.module("uib/template/datepicker/month.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/datepicker/month.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/datepicker/month.html",
     "<table role=\"grid\" aria-labelledby=\"{{::uniqueId}}-title\" aria-activedescendant=\"{{activeDateId}}\">\n" +
     "  <thead>\n" +
@@ -7472,7 +7533,24 @@ angular.module("uib/template/datepicker/month.html", []).run(["$templateCache", 
     "");
 }]);
 
-angular.module("uib/template/datepicker/year.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/datepicker/popup.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("uib/template/datepicker/popup.html",
+    "<div>\n" +
+    "  <ul class=\"uib-datepicker-popup dropdown-menu uib-position-measure\" dropdown-nested ng-if=\"isOpen\" ng-keydown=\"keydown($event)\" ng-click=\"$event.stopPropagation()\">\n" +
+    "    <li ng-transclude></li>\n" +
+    "    <li ng-if=\"showButtonBar\" class=\"uib-button-bar\">\n" +
+    "      <span class=\"btn-group pull-left\">\n" +
+    "        <button type=\"button\" class=\"btn btn-sm btn-info uib-datepicker-current\" ng-click=\"select('today', $event)\" ng-disabled=\"isDisabled('today')\">{{ getText('current') }}</button>\n" +
+    "        <button type=\"button\" class=\"btn btn-sm btn-danger uib-clear\" ng-click=\"select(null, $event)\">{{ getText('clear') }}</button>\n" +
+    "      </span>\n" +
+    "      <button type=\"button\" class=\"btn btn-sm btn-success pull-right uib-close\" ng-click=\"close($event)\">{{ getText('close') }}</button>\n" +
+    "    </li>\n" +
+    "  </ul>\n" +
+    "</div>\n" +
+    "");
+}]);
+
+angular.module("uib/template/datepicker/year.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/datepicker/year.html",
     "<table role=\"grid\" aria-labelledby=\"{{::uniqueId}}-title\" aria-activedescendant=\"{{activeDateId}}\">\n" +
     "  <thead>\n" +
@@ -7502,7 +7580,7 @@ angular.module("uib/template/datepicker/year.html", []).run(["$templateCache", f
     "");
 }]);
 
-angular.module("uib/template/datepickerPopup/popup.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/datepickerPopup/popup.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/datepickerPopup/popup.html",
     "<ul role=\"presentation\" class=\"uib-datepicker-popup dropdown-menu uib-position-measure\" dropdown-nested ng-if=\"isOpen\" ng-keydown=\"keydown($event)\" ng-click=\"$event.stopPropagation()\">\n" +
     "  <li ng-transclude></li>\n" +
@@ -7517,44 +7595,54 @@ angular.module("uib/template/datepickerPopup/popup.html", []).run(["$templateCac
     "");
 }]);
 
-angular.module("uib/template/modal/window.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/modal/backdrop.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("uib/template/modal/backdrop.html",
+    "<div class=\"modal-backdrop\"\n" +
+    "     uib-modal-animation-class=\"fade\"\n" +
+    "     modal-in-class=\"in\"\n" +
+    "     ng-style=\"{'z-index': 1040 + (index && 1 || 0) + index*10}\"\n" +
+    "></div>\n" +
+    "");
+}]);
+
+angular.module("uib/template/modal/window.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/modal/window.html",
     "<div class=\"modal-dialog {{size ? 'modal-' + size : ''}}\"><div class=\"modal-content\" uib-modal-transclude></div></div>\n" +
     "");
 }]);
 
-angular.module("uib/template/pager/pager.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/pager/pager.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/pager/pager.html",
     "<li ng-class=\"{disabled: noPrevious()||ngDisabled, previous: align}\"><a href ng-click=\"selectPage(page - 1, $event)\" ng-disabled=\"noPrevious()||ngDisabled\" uib-tabindex-toggle>{{::getText('previous')}}</a></li>\n" +
     "<li ng-class=\"{disabled: noNext()||ngDisabled, next: align}\"><a href ng-click=\"selectPage(page + 1, $event)\" ng-disabled=\"noNext()||ngDisabled\" uib-tabindex-toggle>{{::getText('next')}}</a></li>\n" +
     "");
 }]);
 
-angular.module("uib/template/pagination/pagination.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/pagination/pagination.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/pagination/pagination.html",
-    "<li ng-if=\"::boundaryLinks\" ng-class=\"{disabled: noPrevious()||ngDisabled}\" class=\"pagination-first\"><a href ng-click=\"selectPage(1, $event)\" ng-disabled=\"noPrevious()||ngDisabled\" uib-tabindex-toggle>{{::getText('first')}}</a></li>\n" +
-    "<li ng-if=\"::directionLinks\" ng-class=\"{disabled: noPrevious()||ngDisabled}\" class=\"pagination-prev\"><a href ng-click=\"selectPage(page - 1, $event)\" ng-disabled=\"noPrevious()||ngDisabled\" uib-tabindex-toggle>{{::getText('previous')}}</a></li>\n" +
-    "<li ng-repeat=\"page in pages track by $index\" ng-class=\"{active: page.active,disabled: ngDisabled&&!page.active}\" class=\"pagination-page\"><a href ng-click=\"selectPage(page.number, $event)\" ng-disabled=\"ngDisabled&&!page.active\" uib-tabindex-toggle>{{page.text}}</a></li>\n" +
-    "<li ng-if=\"::directionLinks\" ng-class=\"{disabled: noNext()||ngDisabled}\" class=\"pagination-next\"><a href ng-click=\"selectPage(page + 1, $event)\" ng-disabled=\"noNext()||ngDisabled\" uib-tabindex-toggle>{{::getText('next')}}</a></li>\n" +
-    "<li ng-if=\"::boundaryLinks\" ng-class=\"{disabled: noNext()||ngDisabled}\" class=\"pagination-last\"><a href ng-click=\"selectPage(totalPages, $event)\" ng-disabled=\"noNext()||ngDisabled\" uib-tabindex-toggle>{{::getText('last')}}</a></li>\n" +
+    "<li role=\"menuitem\" ng-if=\"::boundaryLinks\" ng-class=\"{disabled: noPrevious()||ngDisabled}\" class=\"pagination-first\"><a href ng-click=\"selectPage(1, $event)\" ng-disabled=\"noPrevious()||ngDisabled\" uib-tabindex-toggle>{{::getText('first')}}</a></li>\n" +
+    "<li role=\"menuitem\" ng-if=\"::directionLinks\" ng-class=\"{disabled: noPrevious()||ngDisabled}\" class=\"pagination-prev\"><a href ng-click=\"selectPage(page - 1, $event)\" ng-disabled=\"noPrevious()||ngDisabled\" uib-tabindex-toggle>{{::getText('previous')}}</a></li>\n" +
+    "<li role=\"menuitem\" ng-repeat=\"page in pages track by $index\" ng-class=\"{active: page.active,disabled: ngDisabled&&!page.active}\" class=\"pagination-page\"><a href ng-click=\"selectPage(page.number, $event)\" ng-disabled=\"ngDisabled&&!page.active\" uib-tabindex-toggle>{{page.text}}</a></li>\n" +
+    "<li role=\"menuitem\" ng-if=\"::directionLinks\" ng-class=\"{disabled: noNext()||ngDisabled}\" class=\"pagination-next\"><a href ng-click=\"selectPage(page + 1, $event)\" ng-disabled=\"noNext()||ngDisabled\" uib-tabindex-toggle>{{::getText('next')}}</a></li>\n" +
+    "<li role=\"menuitem\" ng-if=\"::boundaryLinks\" ng-class=\"{disabled: noNext()||ngDisabled}\" class=\"pagination-last\"><a href ng-click=\"selectPage(totalPages, $event)\" ng-disabled=\"noNext()||ngDisabled\" uib-tabindex-toggle>{{::getText('last')}}</a></li>\n" +
     "");
 }]);
 
-angular.module("uib/template/tooltip/tooltip-html-popup.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/tooltip/tooltip-html-popup.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/tooltip/tooltip-html-popup.html",
     "<div class=\"tooltip-arrow\"></div>\n" +
     "<div class=\"tooltip-inner\" ng-bind-html=\"contentExp()\"></div>\n" +
     "");
 }]);
 
-angular.module("uib/template/tooltip/tooltip-popup.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/tooltip/tooltip-popup.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/tooltip/tooltip-popup.html",
     "<div class=\"tooltip-arrow\"></div>\n" +
     "<div class=\"tooltip-inner\" ng-bind=\"content\"></div>\n" +
     "");
 }]);
 
-angular.module("uib/template/tooltip/tooltip-template-popup.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/tooltip/tooltip-template-popup.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/tooltip/tooltip-template-popup.html",
     "<div class=\"tooltip-arrow\"></div>\n" +
     "<div class=\"tooltip-inner\"\n" +
@@ -7563,7 +7651,7 @@ angular.module("uib/template/tooltip/tooltip-template-popup.html", []).run(["$te
     "");
 }]);
 
-angular.module("uib/template/popover/popover-html.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/popover/popover-html.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/popover/popover-html.html",
     "<div class=\"arrow\"></div>\n" +
     "\n" +
@@ -7574,7 +7662,7 @@ angular.module("uib/template/popover/popover-html.html", []).run(["$templateCach
     "");
 }]);
 
-angular.module("uib/template/popover/popover-template.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/popover/popover-template.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/popover/popover-template.html",
     "<div class=\"arrow\"></div>\n" +
     "\n" +
@@ -7587,7 +7675,7 @@ angular.module("uib/template/popover/popover-template.html", []).run(["$template
     "");
 }]);
 
-angular.module("uib/template/popover/popover.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/popover/popover.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/popover/popover.html",
     "<div class=\"arrow\"></div>\n" +
     "\n" +
@@ -7598,18 +7686,18 @@ angular.module("uib/template/popover/popover.html", []).run(["$templateCache", f
     "");
 }]);
 
-angular.module("uib/template/progressbar/bar.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/progressbar/bar.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/progressbar/bar.html",
     "<div class=\"progress-bar\" ng-class=\"type && 'progress-bar-' + type\" role=\"progressbar\" aria-valuenow=\"{{value}}\" aria-valuemin=\"0\" aria-valuemax=\"{{max}}\" ng-style=\"{width: (percent < 100 ? percent : 100) + '%'}\" aria-valuetext=\"{{percent | number:0}}%\" aria-labelledby=\"{{::title}}\" ng-transclude></div>\n" +
     "");
 }]);
 
-angular.module("uib/template/progressbar/progress.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/progressbar/progress.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/progressbar/progress.html",
     "<div class=\"progress\" ng-transclude aria-labelledby=\"{{::title}}\"></div>");
 }]);
 
-angular.module("uib/template/progressbar/progressbar.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/progressbar/progressbar.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/progressbar/progressbar.html",
     "<div class=\"progress\">\n" +
     "  <div class=\"progress-bar\" ng-class=\"type && 'progress-bar-' + type\" role=\"progressbar\" aria-valuenow=\"{{value}}\" aria-valuemin=\"0\" aria-valuemax=\"{{max}}\" ng-style=\"{width: (percent < 100 ? percent : 100) + '%'}\" aria-valuetext=\"{{percent | number:0}}%\" aria-labelledby=\"{{::title}}\" ng-transclude></div>\n" +
@@ -7617,7 +7705,7 @@ angular.module("uib/template/progressbar/progressbar.html", []).run(["$templateC
     "");
 }]);
 
-angular.module("uib/template/rating/rating.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/rating/rating.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/rating/rating.html",
     "<span ng-mouseleave=\"reset()\" ng-keydown=\"onKeydown($event)\" tabindex=\"0\" role=\"slider\" aria-valuemin=\"0\" aria-valuemax=\"{{range.length}}\" aria-valuenow=\"{{value}}\" aria-valuetext=\"{{title}}\">\n" +
     "    <span ng-repeat-start=\"r in range track by $index\" class=\"sr-only\">({{ $index < value ? '*' : ' ' }})</span>\n" +
@@ -7626,7 +7714,7 @@ angular.module("uib/template/rating/rating.html", []).run(["$templateCache", fun
     "");
 }]);
 
-angular.module("uib/template/tabs/tab.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/tabs/tab.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/tabs/tab.html",
     "<li ng-class=\"[{active: active, disabled: disabled}, classes]\" class=\"uib-tab nav-item\">\n" +
     "  <a href ng-click=\"select($event)\" class=\"nav-link\" uib-tab-heading-transclude>{{heading}}</a>\n" +
@@ -7634,7 +7722,7 @@ angular.module("uib/template/tabs/tab.html", []).run(["$templateCache", function
     "");
 }]);
 
-angular.module("uib/template/tabs/tabset.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/tabs/tabset.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/tabs/tabset.html",
     "<div>\n" +
     "  <ul class=\"nav nav-{{tabset.type || 'tabs'}}\" ng-class=\"{'nav-stacked': vertical, 'nav-justified': justified}\" ng-transclude></ul>\n" +
@@ -7649,7 +7737,7 @@ angular.module("uib/template/tabs/tabset.html", []).run(["$templateCache", funct
     "");
 }]);
 
-angular.module("uib/template/timepicker/timepicker.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/timepicker/timepicker.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/timepicker/timepicker.html",
     "<table class=\"uib-timepicker\">\n" +
     "  <tbody>\n" +
@@ -7688,7 +7776,7 @@ angular.module("uib/template/timepicker/timepicker.html", []).run(["$templateCac
     "");
 }]);
 
-angular.module("uib/template/typeahead/typeahead-match.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/typeahead/typeahead-match.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/typeahead/typeahead-match.html",
     "<a href\n" +
     "   tabindex=\"-1\"\n" +
@@ -7697,7 +7785,7 @@ angular.module("uib/template/typeahead/typeahead-match.html", []).run(["$templat
     "");
 }]);
 
-angular.module("uib/template/typeahead/typeahead-popup.html", []).run(["$templateCache", function($templateCache) {
+angular.module("uib/template/typeahead/typeahead-popup.html", []).run(["$templateCache", function ($templateCache) {
   $templateCache.put("uib/template/typeahead/typeahead-popup.html",
     "<ul class=\"dropdown-menu\" ng-show=\"isOpen() && !moveInProgress\" ng-style=\"{top: position().top+'px', left: position().left+'px'}\" role=\"listbox\" aria-hidden=\"{{!isOpen()}}\">\n" +
     "    <li class=\"uib-typeahead-match\" ng-repeat=\"match in matches track by $index\" ng-class=\"{active: isActive($index) }\" ng-mouseenter=\"selectActive($index)\" ng-click=\"selectMatch($index, $event)\" role=\"option\" id=\"{{::match.id}}\">\n" +
