@@ -1,4 +1,4 @@
-const gulp = require('gulp');
+const { task, dest, series, src, watch, parallel } = require('gulp');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 const ignore = require('gulp-ignore');
@@ -8,7 +8,6 @@ const ngAnnotate = require('gulp-ng-annotate');
 const autoprefixer = require('gulp-autoprefixer');
 const htmlmin = require('gulp-htmlmin');
 const zip = require('gulp-zip');
-const runSequence = require('run-sequence'); // 'hack' that should be removed when gulp 4 is out
 const notify = require('gulp-notify');
 const browserSync = require('browser-sync').create();
 
@@ -19,6 +18,10 @@ const SRC_PATH = 'src/';
 const node_modules = 'node_modules/';
 const vendorPath = BUILD_DEST + 'vendors';
 const vendorPathDev = DEV_DEST + 'vendors';
+
+const srcOptions = {
+  allowEmpty: true
+};
 
 // loaded onto the page as-is, use minified when possible or minify before moving to build via gulp process
 var js_paths = {
@@ -130,136 +133,131 @@ var css_paths = {
 };
 
 // jquery
-gulp.task('jquery', function() {
-  return gulp
-    .src(js_paths.jquery.src)
-    .pipe(gulp.dest(vendorPath + js_paths.jquery.dest))
-    .pipe(gulp.dest(vendorPathDev + js_paths.jquery.dest));
+task('jquery', function() {
+  return src(js_paths.jquery.src)
+    .pipe(dest(vendorPath + js_paths.jquery.dest))
+    .pipe(dest(vendorPathDev + js_paths.jquery.dest));
 });
 
 // angular
-gulp.task('angular', function() {
-  return gulp
-    .src([js_paths.angular.src, js_paths.angular.srcmap])
-    .pipe(gulp.dest(vendorPath + js_paths.angular.dest))
-    .pipe(gulp.dest(vendorPathDev + js_paths.angular.dest));
+task('angular', function() {
+  return src([js_paths.angular.src, js_paths.angular.srcmap])
+    .pipe(dest(vendorPath + js_paths.angular.dest))
+    .pipe(dest(vendorPathDev + js_paths.angular.dest));
 });
 
 // animations via animate.css
-gulp.task('animatecss', function() {
-  return gulp
-    .src(css_paths.animatecss.src)
-    .pipe(gulp.dest(vendorPath + css_paths.animatecss.dest))
-    .pipe(gulp.dest(vendorPathDev + css_paths.animatecss.dest));
+task('animatecss', function() {
+  return src(css_paths.animatecss.src)
+    .pipe(dest(vendorPath + css_paths.animatecss.dest))
+    .pipe(dest(vendorPathDev + css_paths.animatecss.dest));
 });
 
 // bootstrap deps
-gulp.task('bootstrap_js', function() {
-  return gulp
-    .src(js_paths.bootstrap.src)
-    .pipe(gulp.dest(vendorPath + js_paths.bootstrap.dest))
-    .pipe(gulp.dest(vendorPathDev + js_paths.bootstrap.dest));
+task('bootstrap_js', function() {
+  return src(js_paths.bootstrap.src)
+    .pipe(dest(vendorPath + js_paths.bootstrap.dest))
+    .pipe(dest(vendorPathDev + js_paths.bootstrap.dest));
 });
-gulp.task('bootstrap_css', function() {
-  return gulp
-    .src([css_paths.bootstrap.src, css_paths.bootstrap.srcmap])
-    .pipe(gulp.dest(vendorPath + css_paths.bootstrap.dest))
-    .pipe(gulp.dest(vendorPathDev + css_paths.bootstrap.dest));
+task('bootstrap_css', function() {
+  return src([css_paths.bootstrap.src, css_paths.bootstrap.srcmap])
+    .pipe(dest(vendorPath + css_paths.bootstrap.dest))
+    .pipe(dest(vendorPathDev + css_paths.bootstrap.dest));
 });
-gulp.task('bootstrap_fonts', function() {
-  return gulp
-    .src(css_paths.bootstrap.fonts)
-    .pipe(gulp.dest(vendorPath + '/fonts/'))
-    .pipe(gulp.dest(vendorPathDev + '/fonts/'));
+task('bootstrap_fonts', function() {
+  return src(css_paths.bootstrap.fonts)
+    .pipe(dest(vendorPath + '/fonts/'))
+    .pipe(dest(vendorPathDev + '/fonts/'));
 });
 //			js_paths.angular_bootstrap.src,
-gulp.task('angular_bootstrap', function() {
-  return gulp
-    .src(js_paths.angular_bootstrap.src)
-    .pipe(gulp.dest(vendorPath + js_paths.angular_bootstrap.dest))
-    .pipe(gulp.dest(vendorPathDev + js_paths.angular_bootstrap.dest));
+task('angular_bootstrap', function() {
+  return src(js_paths.angular_bootstrap.src)
+    .pipe(dest(vendorPath + js_paths.angular_bootstrap.dest))
+    .pipe(dest(vendorPathDev + js_paths.angular_bootstrap.dest));
 });
 // angular_bootstrapcss
-gulp.task('angular_bootstrap_css', function() {
-  return gulp
-    .src([css_paths.angular_bootstrap.src])
-    .pipe(gulp.dest(vendorPath + css_paths.angular_bootstrap.dest))
-    .pipe(gulp.dest(vendorPathDev + css_paths.angular_bootstrap.dest));
+task('angular_bootstrap_css', function() {
+  return src([css_paths.angular_bootstrap.src])
+    .pipe(dest(vendorPath + css_paths.angular_bootstrap.dest))
+    .pipe(dest(vendorPathDev + css_paths.angular_bootstrap.dest));
 });
 // angular_bootstrapcss
-gulp.task('colresizable', function() {
-  return gulp
-    .src([js_paths.colresizable.src])
-    .pipe(gulp.dest(vendorPath + js_paths.colresizable.dest))
-    .pipe(gulp.dest(vendorPathDev + js_paths.colresizable.dest));
+task('colresizable', function() {
+  return src([js_paths.colresizable.src])
+    .pipe(dest(vendorPath + js_paths.colresizable.dest))
+    .pipe(dest(vendorPathDev + js_paths.colresizable.dest));
 });
 
-gulp.task('bootstrap', [
-  'bootstrap_js',
-  'bootstrap_css',
-  'bootstrap_fonts',
-  'angular_bootstrap',
-  'angular_bootstrap_css'
-]);
+task(
+  'bootstrap',
+  series(
+    'bootstrap_js',
+    'bootstrap_css',
+    'bootstrap_fonts',
+    'angular_bootstrap',
+    'angular_bootstrap_css'
+  )
+);
 
 // nprogress, raw JS
-gulp.task('nprogress_js', function() {
-  return gulp
-    .src(js_paths.nprogress.src)
-    .pipe(gulp.dest(vendorPath + js_paths.nprogress.dest))
-    .pipe(gulp.dest(vendorPathDev + js_paths.nprogress.dest));
+task('nprogress_js', function() {
+  return src(js_paths.nprogress.src)
+    .pipe(dest(vendorPath + js_paths.nprogress.dest))
+    .pipe(dest(vendorPathDev + js_paths.nprogress.dest));
 });
-gulp.task('nprogress_css', function() {
-  return gulp
-    .src(css_paths.nprogress.src)
-    .pipe(gulp.dest(vendorPath + css_paths.nprogress.dest))
-    .pipe(gulp.dest(vendorPathDev + css_paths.nprogress.dest));
+task('nprogress_css', function() {
+  return src(css_paths.nprogress.src)
+    .pipe(dest(vendorPath + css_paths.nprogress.dest))
+    .pipe(dest(vendorPathDev + css_paths.nprogress.dest));
 });
 // ngprogress = angular implementation
-gulp.task('ngprogress', function() {
-  return gulp
-    .src(js_paths.ngprogress.src)
-    .pipe(gulp.dest(SRC_PATH + 'js/app/vendors/')); //will be bundled into main app JS during optimization
+task('ngprogress', function() {
+  return src(js_paths.ngprogress.src)
+    .pipe(dest(SRC_PATH + 'js/app/vendors/')); //will be bundled into main app JS during optimization
 });
-gulp.task('nprogress', ['nprogress_js', 'nprogress_css']);
 
-gulp.task('ngtable', function() {
-  return gulp
-    .src(css_paths.ngtable.src)
-    .pipe(gulp.dest(vendorPath + css_paths.ngtable.dest))
-    .pipe(gulp.dest(vendorPathDev + css_paths.ngtable.dest));
+task(
+  'nprogress',
+  series('nprogress_js', 'nprogress_css')
+);
+
+task('ngtable', function() {
+  return src(css_paths.ngtable.src)
+    .pipe(dest(vendorPath + css_paths.ngtable.dest))
+    .pipe(dest(vendorPathDev + css_paths.ngtable.dest));
 });
 
 // run through all vendor deps. These should've been installed with bower beforehand
-gulp.task('vendors', [
-  'jquery',
-  'animatecss',
-  'angular',
-  'bootstrap',
-  'nprogress',
-  'ngtable',
-  'colresizable'
-]);
+task(
+  'vendors',
+  series(
+    'jquery',
+    'animatecss',
+    'angular',
+    'bootstrap',
+    'nprogress',
+    'ngtable',
+    'colresizable'
+  )
+);
 
 // seems duplicate of js_dependencies_angular?
 
-gulp.task('js_dependencies_angular', function() {
+task('js_dependencies_angular', function() {
   return (
-    gulp
-      .src([
-        js_paths.angular_route.src,
-        js_paths.nganimate.src,
-        //js_paths.angular_cookies.src,
-        //node_modules + 'ng-json-explorer/dist/angular-json-explorer.min.js',
-        js_paths.ngprogress.src,
-        js_paths.chartjs.src,
-        js_paths.angular_chart_js.src,
-        js_paths.ngtable.src,
-        js_paths.ngfileupload.src,
-        js_paths.ngfileuploadshim.src,
-        js_paths.angular_bootstrap.src
-      ])
-
+    src([
+      js_paths.angular_route.src,
+      js_paths.nganimate.src,
+      //js_paths.angular_cookies.src,
+      //node_modules + 'ng-json-explorer/dist/angular-json-explorer.min.js',
+      js_paths.ngprogress.src,
+      js_paths.chartjs.src,
+      js_paths.angular_chart_js.src,
+      js_paths.ngtable.src,
+      js_paths.ngfileupload.src,
+      js_paths.ngfileuploadshim.src,
+      js_paths.angular_bootstrap.src
+    ])
       .pipe(
         ngAnnotate().on('error', function(e) {
           console.log('ngAnnotate failed: ', e);
@@ -270,28 +268,27 @@ gulp.task('js_dependencies_angular', function() {
           console.log('concat failed: ', e);
         })
       )
-      .pipe(gulp.dest(DEV_DEST + '/js'))
+      .pipe(dest(DEV_DEST + '/js'))
       /*
     		.pipe(uglify({
 
     		}).on('error', function(e){
     			console.log(e);
     		}))//*/
-      .pipe(gulp.dest(BUILD_DEST + '/js'))
+      .pipe(dest(BUILD_DEST + '/js'))
       .pipe(browserSync.stream())
   );
 });
 
-gulp.task('js_scripts', function() {
-  return gulp
-    .src([SRC_PATH + 'js/*.js', SRC_PATH + 'js/app/**/*.js'])
+task('js_scripts', function() {
+  return src([SRC_PATH + 'js/*.js', SRC_PATH + 'js/app/**/*.js'])
     .pipe(concat('app.min.js'))
     .pipe(
       ngAnnotate().on('error', function(e) {
         console.log('ngAnnotate failed: ', e);
       })
     )
-    .pipe(gulp.dest(DEV_DEST + '/js'))
+    .pipe(dest(DEV_DEST + '/js'))
     .pipe(
       uglify({
         compress: {
@@ -302,20 +299,19 @@ gulp.task('js_scripts', function() {
         console.log('uglify failed: ', e);
       })
     ) //*/
-    .pipe(gulp.dest(BUILD_DEST + '/js'))
+    .pipe(dest(BUILD_DEST + '/js'))
     .pipe(browserSync.stream());
 });
 
-gulp.task('html', function() {
-  return gulp
-    .src([SRC_PATH + '**/*.html'])
-    .pipe(gulp.dest(DEV_DEST))
+task('html', function() {
+  return src([SRC_PATH + '**/*.html'])
+    .pipe(dest(DEV_DEST))
     .pipe(
       htmlmin({
         collapseWhitespace: true
       })
     )
-    .pipe(gulp.dest(BUILD_DEST))
+    .pipe(dest(BUILD_DEST))
     .pipe(browserSync.stream());
 });
 
@@ -323,80 +319,76 @@ var compileSASS = function(filename, options) {
   return sass(SRC_PATH + 'scss/**/*.scss', options)
     .pipe(autoprefixer('last 2 versions', '> 5%'))
     .pipe(concat(filename))
-    .pipe(gulp.dest(BUILD_DEST + '/css'))
-    .pipe(gulp.dest(DEV_DEST + '/css'))
+    .pipe(dest(BUILD_DEST + '/css'))
+    .pipe(dest(DEV_DEST + '/css'))
     .pipe(browserSync.stream());
 };
 
-gulp.task('sass', function() {
+task('sass', function() {
   return compileSASS('custom.css', {});
 });
 
-gulp.task('sass-minify', function() {
+task('sass-minify', function() {
   return compileSASS('custom.min.css', {
     style: 'compressed'
   });
 });
 
+
 // PHP task just copies source to two destinations
-gulp.task('php', function() {
-  return gulp
-    .src([SRC_PATH + 'API/**.php', SRC_PATH + 'API/.htaccess'])
-    .pipe(gulp.dest(BUILD_DEST + 'API'))
-    .pipe(gulp.dest(DEV_DEST + 'API'))
+task('php', function() {
+  return src([SRC_PATH + 'API/**.php', SRC_PATH + 'API/.htaccess'], srcOptions)
+    .pipe(dest(BUILD_DEST + 'API'))
+    .pipe(dest(DEV_DEST + 'API'))
     .pipe(browserSync.stream());
 });
 
-// Remove all processed files in dev and build folders.
-gulp.task('clean', function() {
-  return (
-    gulp
-      .src(
-        [
-          'build.zip',
-          BUILD_DEST + '/**/*.js',
-          DEV_DEST + '/**/*.js',
-          BUILD_DEST + '/**/*.html',
-          DEV_DEST + '/**/*.html',
-          BUILD_DEST + '/**/*.css',
-          DEV_DEST + '/**/*.css',
-          BUILD_DEST + '/**/*.map',
-          DEV_DEST + '/**/*.map',
-          BUILD_DEST + '/**/*.php',
-          DEV_DEST + '/**/*.php',
-          BUILD_DEST + '/vendors/**/*',
-          DEV_DEST + '/vendors/**/*',
-          '**/.DS_Store'
-        ],
-        {
-          read: false
-        }
-      ) // much faster
-      //Ignore a few folders
-      .pipe(ignore('src/**'))
-      .pipe(ignore('node_modules/**'))
-      .pipe(ignore('dev_old/**'))
-      .pipe(ignore('.git/**'))
+const cleanTargets = [
+  'build.zip',
+  BUILD_DEST + '/**/*.js',
+  DEV_DEST + '/**/*.js',
+  BUILD_DEST + '/**/*.html',
+  DEV_DEST + '/**/*.html',
+  BUILD_DEST + '/**/*.css',
+  DEV_DEST + '/**/*.css',
+  BUILD_DEST + '/**/*.map',
+  DEV_DEST + '/**/*.map',
+  BUILD_DEST + '/**/*.php',
+  DEV_DEST + '/**/*.php',
+  BUILD_DEST + '/vendors/**/*',
+  DEV_DEST + '/vendors/**/*',
+  '**/.DS_Store'
+];
 
-      .pipe(
-        rimraf({
-          force: true
-        })
-      )
-  );
+// Remove all processed files in dev and build folders.
+task('clean', function() {
+  return src(cleanTargets, {
+    read: false,
+    allowEmpty: true
+  })
+    .pipe(ignore('src/**'))
+    .pipe(ignore('node_modules/**'))
+    .pipe(ignore('dev_old/**'))
+    .pipe(ignore('.git/**'))
+
+    .pipe(
+      rimraf({
+        force: true
+      })
+    );
 
   // 		.pipe(notify({ message: 'Clean task complete', onLast: true }));
 });
 
-gulp.task('zip', function() {
-  return gulp
-    .src(BUILD_DEST + '/**/', {
-      dot: true
-    })
+task('zip', function() {
+  return src(BUILD_DEST + '/**/', {
+    dot: true,
+    allowEmpty: true
+  })
     .pipe(zip('build.zip'))
     .pipe(ignore('**/chart.php'))
     .pipe(ignore('**/test.php'))
-    .pipe(gulp.dest('./'))
+    .pipe(dest('./'))
     .pipe(
       notify({
         message: 'Build process complete',
@@ -405,7 +397,7 @@ gulp.task('zip', function() {
     );
 });
 
-gulp.task('browser-sync', function() {
+task('browser-sync', function() {
   browserSync.init({
     server: {
       baseDir: './'
@@ -413,28 +405,30 @@ gulp.task('browser-sync', function() {
     startPath: './dev'
   });
 });
+
 // ######## main tasks ########
-gulp.task('watch', function() {
+task('watch', function() {
   // Watch .html files
-  gulp.watch(SRC_PATH + '**/*.html', ['html']);
+  watch(SRC_PATH + '**/*.html', series('html'));
 
   // Watch .php API resources
-  gulp.watch(SRC_PATH + 'API/*.php', ['php']);
+  watch(SRC_PATH + 'API/*.php', series('php'));
 
   // Watch .js files
-  gulp.watch(SRC_PATH + 'js/*.js', ['js_scripts']);
-  gulp.watch(SRC_PATH + 'js/app/**/*.js', ['js_scripts']);
+  watch(SRC_PATH + 'js/*.js', series('js_scripts'));
+  watch(SRC_PATH + 'js/app/**/*.js', series('js_scripts'));
 
   // too slow to just feed that through, too many files there.
-  //gulp.watch(node_modules + '**/*.js', ['js_dependencies_angular']);
+  //watch(node_modules + '**/*.js', ['js_dependencies_angular']);
 
   // Watch .scss files
-  gulp.watch(SRC_PATH + 'scss/*.scss', ['sass', 'sass-minify']);
+  watch(SRC_PATH + 'scss/*.scss', series('sass', 'sass-minify'));
 });
 
 // need run sequence, or everything will happen in parallel, meaning the zip process could happen before all files are ready
-gulp.task('build', function(done) {
-  return runSequence(
+task(
+  'build',
+  series(
     'clean',
     'sass',
     'sass-minify',
@@ -443,13 +437,10 @@ gulp.task('build', function(done) {
     'php',
     'js_dependencies_angular',
     'js_scripts',
-    'zip',
-    function() {
-      done();
-    }
-  );
-});
+    'zip'
+  )
+);
 
-//gulp.task('build', ['sass','sass-minify','vendors', 'html', 'php','js_dependencies_angular','js_scripts','zip'])
+//task('build', ['sass','sass-minify','vendors', 'html', 'php','js_dependencies_angular','js_scripts','zip'])
 // Default Task
-gulp.task('default', ['build', 'watch', 'browser-sync']);
+task('default', series('build', parallel('watch', 'browser-sync')));

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="myApp">
 	<head>
-		
+
 	    <meta charset="utf-8">
 	    <meta http-equiv="X-UA-Compatible" content="IE=edge;text/html; charset=utf-8">
 	    <meta name="viewport" content="width=device-width, initial-scale=1">
 		<title ng:bind-template="{{getLocation()}}">Loading...</title>
-		
+
 		<link rel="stylesheet" type="text/css" href="vendors/bootstrap/bootstrap.min.css">
 		<link rel="stylesheet" type="text/css" href="vendors/angular-ui-bootstrap/ui-bootstrap-csp.css">
-		<link rel="stylesheet" type="text/css" href="vendors/ng-table/ng-table.min.css">		
-		<link rel="stylesheet" type="text/css" href="vendors/animate.css/animate.min.css">		
-		
+		<link rel="stylesheet" type="text/css" href="vendors/ng-table/ng-table.min.css">
+		<link rel="stylesheet" type="text/css" href="vendors/animate.css/animate.min.css">
+
 		<!-- Custom Theme Style -->
-		<link rel="stylesheet" type="text/css" href="css/custom.min.css">		
+		<link rel="stylesheet" type="text/css" href="css/custom.min.css">
 	</head>
 	<body>
 		<div class="container-fluid fill-height mainContainer">
@@ -26,7 +26,7 @@
 						<li>
 							<button class="btn btn-danger btn-xs" ng-click="doReset()" title="Reset Parser"><span class="glyphicon glyphicon-refresh"></span> Reset</button>
 						</li>
-						<li>	
+						<li>
 							<div class="btn-group" role="group" aria-label="...">
 								<button class="btn btn-default btn-xs" ng-click="viewHelp()" title="Usage Info"><span class="glyphicon glyphicon-question-sign"></span></button>
 								<a href="https://github.com/tiagosiebler/MSTRWebLogParser" target="_blank" class="btn btn-default btn-xs" role="button" title="View Repository"><span class="glyphicon glyphicon-globe"></span></a>
@@ -35,16 +35,16 @@
 		  			</ul>
 				</div>
 			</div>
-			
+
 			<div class="col-md-12 keepFront">
 				<!-- Notices -->
 				<br />
-				<div 
+				<div
 					class="alert alert-dismissible bouncein bounceout"
 					ng-class="getErrorCSS(error.status)"
-					role="alert" 
-					ng-show="hasError" 
-					title="Error status {{error.status}}" 
+					role="alert"
+					ng-show="hasError"
+					title="Error status {{error.status}}"
 					data-ng-click="hasError = null">
 					<div>
 						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
@@ -57,11 +57,11 @@
 				<sidebar></sidebar>
 			</div>
 				-->
-				
+
             <div class="col-md-12" ng-show="isParsing()" class="flipin flipout">
                 <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Parsing in progress...processing {{totalData}} rows...
             </div>
-			
+
 			<div class="mainTableContainer" ng-show="$root.totalData && !isParsing()" class="flipin flipout">
 				<div id="normalView" ng-if="dataset.logs.web.length == 0 || dataset.logs.kernel.length == 0">
 						<logsweb></logsweb>
@@ -77,23 +77,23 @@
 							</uib-tab>
 					    </uib-tabset>
 				</div>
-				
-				
+
+
 			</div>
-			
+
 			<div class="col-md-12" ng-hide="$root.totalData" class="flipin flipout">
 				<!-- contents where we'll paste log, drag n drop, or select + upload -->
 				<startform></startform>
 			</div>
 
-			
-			
-			
-			
+
+
+
+
 		</div>
 		<!-- footer -->
 		<toaster-container toaster-options="{'time-out': 3000}"></toaster-container>
-		
+
 		<!-- jQuery -->
 		<script type="text/javascript" src="vendors/jquery/jquery.min.js"></script>
 
@@ -107,14 +107,14 @@
 
 		<!-- NProgress -->
 		<script type="text/javascript" src="vendors/nprogress/nprogress.js"></script>
-	
+
 		<!-- colresizable -->
 		<script type="text/javascript" src="vendors/colresizable/colResizable-1.6.min.js"></script>
-				
+
 		<!-- Custom Scripts -->
 		<script type="text/javascript" src="js/deps.min.js"></script>
 		<script type="text/javascript" src="js/app.min.js"></script>
-		
+
 		<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>-->
 	</body>
 </html>
