@@ -4,32 +4,6 @@
     '$rootScope',
     '$q',
     function(ngProgressFactory, $rootScope, $q) {
-      /*
-			var progressBar = ngProgressFactory.createInstance();
-			//progressBar.setParent(document.getElementById('main-container'));
-			progressBar.queue = 0;
-			progressBar.updateQueue = function(value){
-				var startedNow = true;
-				if(progressBar.queue == 0) startedNow = false;
-				progressBar.queue = progressBar.queue + value;
-				
-				if(progressBar.queue > 0) {
-					if(!startedNow) {
-						progressBar.start();
-					}
-					else{
-						if(progressBar.queue != 1){
-							var newVal = (100 / progressBar.queue);
-							progressBar.set(newVal);
-							progressBar.start();
-						}
-					}
-				}
-				else{
-					progressBar.complete();
-				}
-			}*/
-
       var Data = {};
 
       // maintain progress bar when any parsing is in progress
@@ -49,6 +23,7 @@
         $rootScope.dataset.state.filesParsing = 0;
         $rootScope.totalData = 0;
       };
+
       // maybe move this into a helper class?
       // We have a predefined template of columns. Any extra column found in row that isn't in this list is added into the 'others' column
       Data.concatExtraColsWeb = function(row) {
@@ -85,6 +60,7 @@
           ? true
           : false;
       };
+
       Data.splitDt = function(str) {
         var arr = str.split(' '),
           result = arr.splice(0, 2);
@@ -92,6 +68,7 @@
         result.push(arr.join(' '));
         return result;
       };
+
       // WARNING: too painful to include supplementary planes, these characters (0x10000 and higher)
       // will be stripped by this function. See what you are missing (heiroglyphics, emoji, etc) at:
       // http://en.wikipedia.org/wiki/Plane_(Unicode)#Supplementary_Multilingual_Plane
@@ -125,6 +102,7 @@
           }
         }
       };
+
       Data.parseWebXMLLog = function(logContents) {
         // web log files are xml but aren't wrapped in an XML tab.
         var xml = '<xml>' + logContents + '</xml>';
@@ -189,6 +167,7 @@
           $rootScope.dataset.logs.web.length
         );
       };
+
       Data.processKernelMessage = function(message, dataset, index) {
         //console.log("message length: ",message.length);
         var command = message[1];
@@ -287,6 +266,7 @@
         $rootScope.dataset.logs.kernel.push(kernelMessage);
         $rootScope.totalData++;
       };
+
       Data.parseKernelXMLLog = function(logContents) {
         var messages = logContents.split(/\r?\n/); //split by newlines
         if (messages.length) {
@@ -379,6 +359,7 @@
           return 'kernelXML';
         } else return 'unknown';
       };
+
       Data.logParserError = function(error, level, logLine) {
         if (typeof level == 'undefined') level = 'Danger';
         if (typeof logLine != 'undefined') {
@@ -397,6 +378,7 @@
         Data.handleError(error);
         //debugger;
       };
+
       Data.handleError = function(e) {
         if (typeof e.data != 'undefined' && e.data) {
           //console.log("POST failed",e);
@@ -419,38 +401,40 @@
           };
         }
       };
+
       // generalist method that takes a log file's contents, decides the log type, and passes the log file to the appropriate parser method
       Data.processNewLog = function(logContents) {
         //logic to determine the type of log (web/webxmlAPI/kernelAPI/DSSErrors.log)
         var logType = Data.recogniseLog(logContents);
         switch (logType) {
-          case 'webXML':
+        case 'webXML':
           //console.log("Handling " + logType + " log");
           Data.parseWebXMLLog(logContents);
-          break;
+            break;
 
           case 'kernelXML':
           //console.log("Handling " + logType + " log");
           Data.parseKernelXMLLog(logContents);
-          break;
+            break;
 
         default:
-            console.error(
-              'Error: unhandled log type - type not recognized. Original file: ',
-              logContents
-            );
+          console.error(
+            'Error: unhandled log type - type not recognized. Original file: ',
+            logContents
+          );
           var error = {
-            data: {
-                status: 'Parse Failure',
-                message: 'Unrecognised Log Type',
-                cause:
+              data: {
+              status: 'Parse Failure',
+              message: 'Unrecognised Log Type',
+              cause:
                   'Verify the log file is valid. Contact Tiago if the issue persists.'
             }
-            };
-          Data.handleError(error);
-          break;
+          };
+            Data.handleError(error);
+            break;
         }
       };
+
       Data.testCreation = function() {
         //console.log("Test creation");
         Data.resetLogs();

@@ -105,12 +105,12 @@ angular
               toast.bodyOutputType || mergedConfig['body-output-type'];
             switch (toast.bodyOutputType) {
             case 'trustedHtml':
-              toast.html = $sce.trustAsHtml(toast.body);
-                break;
-            case 'template':
-                toast.bodyTemplate =
-                  toast.body || mergedConfig['body-template'];
+                toast.html = $sce.trustAsHtml(toast.body);
               break;
+              case 'template':
+              toast.bodyTemplate =
+                  toast.body || mergedConfig['body-template'];
+                break;
             }
 
             scope.configureTimer(toast);
