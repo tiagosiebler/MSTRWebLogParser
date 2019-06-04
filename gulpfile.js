@@ -284,7 +284,9 @@ task('js_scripts', function() {
   return src([SRC_PATH + 'js/*.js', SRC_PATH + 'js/app/**/*.js'])
     .pipe(concat('app.min.js'))
     .pipe(
-      ngAnnotate().on('error', function(e) {
+      ngAnnotate({
+        showStack: true
+      }).on('error', function(e) {
         console.log('ngAnnotate failed: ', e);
       })
     )

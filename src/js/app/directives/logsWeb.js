@@ -1,14 +1,27 @@
 (function() {
-  angular.module('logsWeb', ['ngTable','ui.bootstrap','inspectLogWebCtrl'])
+  angular
+    .module('logsWeb', ['ngTable', 'ui.bootstrap', 'inspectLogWebCtrl'])
 
     .directive('logsweb', function() {
       return {
         restrict: 'E',
         templateUrl: 'partials/logsWeb.html',
-        link: function (scope, element, attrs) {
-				
-        },
-        controller: ['$scope','$rootScope','NgTableParams', '$filter', '$timeout','$uibModal', function($scope, $rootScope, NgTableParams, $filter, $timeout, $uibModal) {	
+        link: function(scope, element, attrs) {},
+        controller: [
+          '$scope',
+          '$rootScope',
+          'NgTableParams',
+          '$filter',
+          '$timeout',
+          '$uibModal',
+          function(
+            $scope,
+            $rootScope,
+            NgTableParams,
+            $filter,
+            $timeout,
+            $uibModal
+          ) {
             var self = $scope;
 
             self.total = {};
@@ -16,64 +29,68 @@
             self.paginationWeb.currentPage = 1;
             self.paginationWeb.perPage = 50;
 
-          self.debug = function(param){
+            self.debug = function(param) {
               debugger;
-          };
+            };
 
             // all tracking vars for drag n drop action
-          self.dragging = false;
+            self.dragging = false;
             self.mouseIsDown = false;
-          self.mouseDown = function(event){
+
+            self.mouseDown = function(event) {
               //console.log("mouse down");
               self.mouseIsDown = true;
-            self.dragging = false;
+              self.dragging = false;
             };
-          self.mouseUp = function(log){
+
+            self.mouseUp = function(log) {
               //console.log("mouse up");
               self.mouseIsDown = false;
 
-            if (self.dragging){
+              if (self.dragging) {
                 //console.log("Must have dragged");
                 return false;
-            } else {
+              } else {
                 self.viewWebMessage(log);
-            }
+              }
             };
-          self.mouseMove = function(event){
-            //console.log("mouse moved");
+
+            self.mouseMove = function(event) {
+              //console.log("mouse moved");
               self.dragging = true;
             };
-          self.dblClick = function($event){
-            //console.log("double click");
-            //$event.preventDefault();
+
+            self.dblClick = function($event) {
+              //console.log("double click");
+              //$event.preventDefault();
               //$event.stopPropagation();
             };
-          self.preventAction = function($event){
+
+            self.preventAction = function($event) {
               $event.preventDefault();
               $event.stopPropagation();
-          };
+            };
 
             // Enable resize
             self.resizeWeb = false;
-          self.toggleResizeWeb = function () {
+            self.toggleResizeWeb = function() {
               if (self.resizeWeb) {
-              console.log('disabling resize');
-              $('#ngTableWebLogs').colResizable({
+                console.log('disabling resize');
+                $('#ngTableWebLogs').colResizable({
                   disable: true
                 });
                 self.resizeWeb = false;
               } else {
-              console.log('enabling resize');
-              $('#ngTableWebLogs').colResizable({
+                console.log('enabling resize');
+                $('#ngTableWebLogs').colResizable({
                   fixed: false,
                   liveDrag: true,
                   resizeMode: 'overflow',
-                gripInnerHtml:"<div class='grip'></div>", 
+                  gripInnerHtml: "<div class='grip'></div>",
                   draggingClass: 'dragging'
                 });
                 self.resizeWeb = true;
-            }
-          };
+              }
             };
 
             //esvit/ng-table/issues/189
@@ -92,26 +109,38 @@
 			    ];//*/
 
             self.columns = {
-            "LID": {'title': 'Reference ID of log message within log file. Higher numbers are more recent messages.'},
-            "Package": {'title': 'Package Name'},
+              LID: {
+                title:
+                  'Reference ID of log message within log file. Higher numbers are more recent messages.'
+              },
+              Package: {
+                title: 'Package Name'
+              }
             };
 
             // delete a row from the dataset
             self.delWeb = function(row) {
-            _.remove(self.webLogTableParams.settings().dataset, function(item) {
+              _.remove(self.webLogTableParams.settings().dataset, function(
+                item
+              ) {
                 return row === item;
               });
 
               self.webLogTableParams.reload().then(function(data) {
-              if ($rootScope.dataset.logs.web.length === 0 && self.webLogTableParams.total() > 0) {
-                self.webLogTableParams.page(self.webLogTableParams.page() - 1);
+                if (
+                  $rootScope.dataset.logs.web.length === 0 &&
+                  self.webLogTableParams.total() > 0
+                ) {
+                  self.webLogTableParams.page(
+                    self.webLogTableParams.page() - 1
+                  );
                   self.webLogTableParams.reload();
                 }
               });
-          };
+            };
 
             // create a popup with contents of param, deprecated in favour of bootstrap modals
-          self.alert = function(param){
+            self.alert = function(param) {
               //alert(param);
               var html = document.createElement('html');
               var body = document.createElement('body');
@@ -121,21 +150,25 @@
               body.appendChild(pre);
               pre.appendChild(document.createTextNode(param));
 
-            var x=window.open('','_blank', 'toolbar=0,location=0,menubar=0,height=500,width=1400');
+              var x = window.open(
+                '',
+                '_blank',
+                'toolbar=0,location=0,menubar=0,height=500,width=1400'
+              );
               x.document.open();
               x.document.write(html.innerHTML);
               x.document.close();
-          };
-                
-          //Highlight row on click
-            self.isSelected = [];
-          self.toggleSelection = function (log) {
-            log.isSelected =!log.isSelected;
-            console.log('row selection toggled: ', log.isSelected);
-          };
+            };
 
-          // open modal to display full log in scrollable subview
-          self.viewWebMessage = function(log){
+            //Highlight row on click
+            self.isSelected = [];
+            self.toggleSelection = function(log) {
+              log.isSelected = !log.isSelected;
+              console.log('row selection toggled: ', log.isSelected);
+            };
+
+            // open modal to display full log in scrollable subview
+            self.viewWebMessage = function(log) {
               // open a modal view of that log message
               var modalInstance = $uibModal.open({
                 animation: true,
@@ -144,38 +177,36 @@
                 size: 'lg',
                 windowClass: 'app-modal-window',
                 resolve: {
-                log: function () {
+                  log: function() {
                     return log;
+                  }
                 }
-              }
-            });
               });
-
-              modalInstance.result.then(
-                function(result) {
-                  var nextID;
-              if (result.action == 'next'){
-                    // debugger;
-                nextID = result.data - 1;//since rows are in reverse order, top row is first row
-                  } else if (result.action == 'previous') {
-                    nextID = result.data + 1;
-              }
-                  //todo this doesn't work when sort order is changed
-                  self.viewWebMessage($rootScope.dataset.logs.web[nextID]);
-            }, function () {
-                  //console.log('Modal dismissed at: ' + new Date());
-            }
-            );
-          };
-              );
             };
 
-            // open small modal with quick view of passed parameter
-          self.quickView = function(param){
-              debugger;
-          };
+            modalInstance.result.then(
+              function(result) {
+                var nextID;
+                if (result.action == 'next') {
+                  // debugger;
+                  nextID = result.data - 1; //since rows are in reverse order, top row is first row
+                } else if (result.action == 'previous') {
+                  nextID = result.data + 1;
+                }
+                //todo this doesn't work when sort order is changed
+                self.viewWebMessage($rootScope.dataset.logs.web[nextID]);
+              },
+              function() {
+                //console.log('Modal dismissed at: ' + new Date());
+              }
+            );
 
-          self.filters = {
+            // open small modal with quick view of passed parameter
+            self.quickView = function(param) {
+              debugger;
+            };
+
+            self.filters = {
               package: '',
               level: '',
               miliseconds: '',
@@ -224,10 +255,10 @@
 						getData: function(params){
 						    // method to do custom filtering etc of data
 						    return $rootScope.dataset.logs.web;
-					
-					
+
+
 						},//*/
-            counts: [10, 25, 50, 100, 500],//1000 is SLOW
+                counts: [10, 25, 50, 100, 500] //1000 is SLOW
               }
             );
 
@@ -246,9 +277,9 @@
 					}, 300)
 				});//*/
 
-          $scope.$on('dataset.web.added', function(){
+            $scope.$on('dataset.web.added', function() {
               //console.log("handle added dataset");
-            $timeout(function(){
+              $timeout(function() {
                 //debugger;
                 //console.log("reloading table data")
                 self.webLogTableParams.settings({

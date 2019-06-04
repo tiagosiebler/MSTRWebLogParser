@@ -25,7 +25,7 @@ module.exports = {
       'jest/valid-expect': 'error',
       'array-bracket-spacing': ['error', 'never'],
       indent: ['warn', 2],
-      'linebreak-style': ['error', 'unix'],
+      'linebreak-style': ['error', 'windows'],
       'lines-between-class-members': ['warn', 'always'],
       quotes: ['error', 'single'],
       semi: ['error', 'always'],

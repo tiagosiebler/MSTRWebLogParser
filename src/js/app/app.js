@@ -8,15 +8,16 @@
       'logsWeb',
       'logsKernel'
     ])
-    //add cookies back in ,'ngCookies'
 
     .run(function($http, $rootScope, $uibModal, ngProgressFactory, Data) {
       $rootScope.authenticated = true;
       $rootScope.authToken = 'test';
       $rootScope.startField = 'test';
+
       $rootScope.getLocation = function() {
-        return 'MSTR Log Parser';
+        return 'MicroStrategy Log Parser';
       };
+
       $rootScope.getErrorCSS = function(error) {
         if (!error) return 'alert-danger';
 
@@ -24,10 +25,12 @@
         if (error.status == 'Warning') return 'alert-warning';
         else return 'alert-danger';
       };
+
       $rootScope.doReset = function() {
         $rootScope.totalData = 0;
         return Data.resetLogs();
       };
+
       $rootScope.viewHelp = function() {
         var modalInstance = $uibModal.open({
           animation: true,
