@@ -32,7 +32,7 @@
       };
 
       $rootScope.viewHelp = function() {
-        var modalInstance = $uibModal.open({
+        $uibModal.open({
           animation: true,
           templateUrl: 'partials/sub/helpView.html',
           size: 'lg'
