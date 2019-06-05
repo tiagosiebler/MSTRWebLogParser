@@ -3,10 +3,11 @@
   <div class="panel-heading clearfix">
     <b>MSTR Kernel XML API Logs - ({{dataset.logs.kernel.length - 1}} loaded) </b>
     <b ng-show="tableParams.hasFilter()">- (Filtered results: {{tableParams.total() - 1}})</b>
-    <div class="btn-group pull-right">
-      <button class="btn btn-default btn-xs" ng-click="toggleResizeKernel()" ng-class="{'active': resizeKernel}"><span class="glyphicon glyphicon-resize-horizontal"></span> Resize</button>
+    <div class="btn-group pull-left">
       <button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter" ng-class="{'active': showFilter}"><span class="glyphicon glyphicon-filter"></span> Search</button>
-      <!--<button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter"><span class="glyphicon glyphicon-plus"></span></button>-->
+      <button class="btn btn-default btn-xs" ng-click="toggleResizeKernel()" ng-class="{'active': resizeKernel}"><span class="glyphicon glyphicon-resize-horizontal"></span> Resize</button>
+      <button class="btn btn-default btn-xs" ng-click="download('json')""><span class="glyphicon glyphicon-download-alt" title="JSON"></span> JSON</button>
+  <!--<button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter"><span class="glyphicon glyphicon-plus"></span></button>-->
     </div>
   </div>
   <div class="table table-responsive logTable">
