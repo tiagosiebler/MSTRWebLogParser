@@ -108,22 +108,24 @@
               }
             };
 
-            self.downloadJSON = function(exportObj, exportName) {
-              var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+            self.downloadKernelJSON = function(exportObj, exportName) {
+              var jsonText = JSON.stringify(exportObj);
+              var blobData = new Blob([jsonText], { type: 'text/json;charset=utf-8;' });
+
               var downloadAnchorNode = document.createElement('a');
-              downloadAnchorNode.setAttribute("href", dataStr);
+              downloadAnchorNode.setAttribute("href", URL.createObjectURL(blobData));
               downloadAnchorNode.setAttribute("download", exportName + ".json");
               document.body.appendChild(downloadAnchorNode); // required for firefox
               downloadAnchorNode.click();
               downloadAnchorNode.remove();
             }
 
-            self.download = function(typeString) {
-              var exportObj = $rootScope.dataset.logs.kernel;
-              var exportName = "microstrategyKernelLog";
+            self.downloadKernel = function(typeString) {
+              var exportObj = $rootScope.dataset.logs.web;
+              var exportName = "microstrategKernelLog";
 
               if (typeString == 'json') {
-                return self.downloadJSON(exportObj, exportName);
+                return self.downloadKernelJSON(exportObj, exportName);
               }
               console.warn("Can't download(), unknown type string: ", typeString);
             }
