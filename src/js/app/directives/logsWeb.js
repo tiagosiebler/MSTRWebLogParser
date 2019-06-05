@@ -1,7 +1,6 @@
 (function() {
   angular
     .module('logsWeb', ['ngTable', 'ui.bootstrap', 'inspectLogWebCtrl'])
-
     .directive('logsweb', function() {
       return {
         restrict: 'E',
@@ -92,6 +91,26 @@
                 self.resizeWeb = true;
               }
             };
+
+            self.downloadJSON = function(exportObj, exportName) {
+              var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+              var downloadAnchorNode = document.createElement('a');
+              downloadAnchorNode.setAttribute("href", dataStr);
+              downloadAnchorNode.setAttribute("download", exportName + ".json");
+              document.body.appendChild(downloadAnchorNode); // required for firefox
+              downloadAnchorNode.click();
+              downloadAnchorNode.remove();
+            }
+
+            self.download = function(typeString) {
+              var exportObj = $rootScope.dataset.logs.web;
+              var exportName = "microstrategyWebLog";
+
+              if (typeString == 'json') {
+                return self.downloadJSON(exportObj, exportName);
+              }
+              console.warn("Can't download(), unknown type string: ", typeString);
+            }
 
             //esvit/ng-table/issues/189
             /*
