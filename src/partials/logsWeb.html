@@ -1,17 +1,17 @@
 <div class="panel panel-default" class="flipin flipout" ng-show="dataset.logs.web.length != 0">
-	<!-- Default panel contents -->	
+	<!-- Default panel contents -->
 	<div class="panel-heading clearfix">
 		<b>MSTR Web Logs - ({{dataset.logs.web.length - 1}} loaded) </b>
 		<b ng-show="tableParams.hasFilter()">- (Filtered results: {{tableParams.total() - 1}})</b>
-		<div class="btn-group pull-right">
-			<button class="btn btn-default btn-xs" ng-click="toggleResizeWeb()" ng-class="{'active': resizeWeb}"><span class="glyphicon glyphicon-resize-horizontal"></span> Resize</button>	
-			<button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter" ng-class="{'active': showFilter}"><span class="glyphicon glyphicon-filter"></span> Search</button>	
+		<div class="btn-group pull-left">
+			<button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter" ng-class="{'active': showFilter}"><span class="glyphicon glyphicon-filter"></span> Search</button>
+      <button class="btn btn-default btn-xs" ng-click="toggleResizeWeb()" ng-class="{'active': resizeWeb}"><span class="glyphicon glyphicon-resize-horizontal"></span> Resize</button>
 			<!--<button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter"><span class="glyphicon glyphicon-plus"></span></button>-->
 		</div>
 	</div>
 	<div class="table table-responsive logTable">
 		<table ng-table="webLogTableParams" id="ngTableWebLogs" class="table table-condensed logTable" show-filter="showFilter" ng-table-columns-binding="columns">
-			
+
 			<!--<tr>
 				<th>Package</th>
 				<th>Level</th>
@@ -28,15 +28,15 @@
 		log.exception.textLength
 				-->
 				<!-- info: log.level== 'MESSAGE', warning: log.level== 'SEVERE' text-primary  table-striped table-hover -->
-			<tr ng-if="!dataset.state.isParsing" ng-repeat="log in webLogTableParams.data track by log.id+log.miliseconds" ng-class="{'bg-primary': log.isSelected}" 
+			<tr ng-if="!dataset.state.isParsing" ng-repeat="log in webLogTableParams.data track by log.id+log.miliseconds" ng-class="{'bg-primary': log.isSelected}"
                 disabledng-mousedown="mouseDown(event)"
                 disabledng-mouseup  ="mouseUp(log)"
                 disabledsglclick="mouseUp(log)"
                 disabledng-mousemove="mouseMove(event)"
                 ng-dblClick="viewWebMessage(log)"
                 >
-				
-				<td title="'LID'" 			filter="{ id: 'number'}" 		sortable="'id'" 		ng-if="true" header-title="columns.LID.title" class="text-center">{{log.id}}</td>				
+
+				<td title="'LID'" 			filter="{ id: 'number'}" 		sortable="'id'" 		ng-if="true" header-title="columns.LID.title" class="text-center">{{log.id}}</td>
 				<td title="'Milliseconds'" 	filter="{ miliseconds: 'text'}" sortable="'miliseconds'" ng-if="true" class="text-center">{{log.miliseconds}}</td>
 				<td title="'TimeStamp'" 	filter="{ timestamp: 'text'}" 	sortable="'timestamp'"	ng-if="true" class="text-center">{{log.timestamp}}</td>
 				<td title="'Thread'"		filter="{ thread: 'text'}" 		sortable="'thread'"		ng-if="true" class="colThread text-center">{{log.thread}}</td>
@@ -52,11 +52,11 @@
 					</div>
 				</td>
 				<td title="'Others'" 		filter="{ others: 'text'}" 		sortable="'others'"		ng-if="true">{{log.others}}</td>
-				
+
 	            <td>
 					<button class="btn btn-default btn-sm" ng-click="toggleSelection(log)" ng-class="{'active': log.isSelected}" ng-dblClick="preventAction($event)"><span class="glyphicon glyphicon-flag"></span></button>
 					<button class="btn btn-default btn-sm" ng-click="viewWebMessage(log)" ng-dblClick="preventAction($event)"><span class="glyphicon glyphicon-eye-open"></span></button>
-					<button class="btn btn-danger btn-sm" ng-click="delWeb(log)" ng-dblClick="preventAction($event)"><span class="glyphicon glyphicon-trash"></span></button>	
+					<button class="btn btn-danger btn-sm" ng-click="delWeb(log)" ng-dblClick="preventAction($event)"><span class="glyphicon glyphicon-trash"></span></button>
 				</td>
 			</tr>
 		</table>
