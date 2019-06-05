@@ -182,10 +182,8 @@
                   }
                 }
               });
-            };
 
-            modalInstance.result.then(
-              function(result) {
+              modalInstance.result.then(function(result) {
                 var nextID;
                 if (result.action == 'next') {
                   // debugger;
@@ -195,11 +193,8 @@
                 }
                 //todo this doesn't work when sort order is changed
                 self.viewWebMessage($rootScope.dataset.logs.web[nextID]);
-              },
-              function() {
-                //console.log('Modal dismissed at: ' + new Date());
-              }
-            );
+              });
+            };
 
             // open small modal with quick view of passed parameter
             self.quickView = function(param) {
