@@ -108,25 +108,43 @@
               }
             };
 
+            self.triggerDownloadForBlob = function(blobData, fileName, ext) {
+              var downloadAnchorNode = document.createElement('a');
+              downloadAnchorNode.setAttribute("href", URL.createObjectURL(blobData));
+              downloadAnchorNode.setAttribute("download", fileName + "." + ext);
+              document.body.appendChild(downloadAnchorNode); // required for firefox
+              downloadAnchorNode.click();
+              downloadAnchorNode.remove();
+            }
+
             self.downloadKernelJSON = function(exportObj, exportName) {
               var jsonText = JSON.stringify(exportObj);
               var blobData = new Blob([jsonText], { type: 'text/json;charset=utf-8;' });
 
-              var downloadAnchorNode = document.createElement('a');
-              downloadAnchorNode.setAttribute("href", URL.createObjectURL(blobData));
-              downloadAnchorNode.setAttribute("download", exportName + ".json");
-              document.body.appendChild(downloadAnchorNode); // required for firefox
-              downloadAnchorNode.click();
-              downloadAnchorNode.remove();
+              self.triggerDownloadForBlob(blobData, exportName, "json");
+            }
+
+            self.downloadKernelCSV = function(exportObj, exportName) {
+              var firstRow = exportObj[0];
+              var fields = Object.keys(firstRow);
+              var csv = json2csv.parse(exportObj, { fields: fields });
+
+              var blobData = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+              self.triggerDownloadForBlob(blobData, exportName, "csv");
             }
 
             self.downloadKernel = function(typeString) {
               var exportObj = $rootScope.dataset.logs.web;
               var exportName = "microstrategKernelLog";
 
-              if (typeString == 'json') {
+              if (typeString === 'json') {
                 return self.downloadKernelJSON(exportObj, exportName);
               }
+
+              if (typeString === 'csv') {
+                return self.downloadKernelCSV(exportObj, exportName);
+              }
+
               console.warn("Can't download(), unknown type string: ", typeString);
             }
 

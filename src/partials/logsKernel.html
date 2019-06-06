@@ -6,8 +6,17 @@
     <div class="btn-group pull-left">
       <button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter" ng-class="{'active': showFilter}"><span class="glyphicon glyphicon-filter"></span> Search</button>
       <button class="btn btn-default btn-xs" ng-click="toggleResizeKernel()" ng-class="{'active': resizeKernel}"><span class="glyphicon glyphicon-resize-horizontal"></span> Resize</button>
-      <button class="btn btn-default btn-xs" ng-click="downloadKernel('json')""><span class="glyphicon glyphicon-download-alt" title="JSON"></span> JSON</button>
-  <!--<button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter"><span class="glyphicon glyphicon-plus"></span></button>-->
+
+      <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="glyphicon glyphicon-download-alt" title="Download"></span>
+        Download
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#" ng-click="downloadKernel('json')">JSON</a></li>
+        <li><a href="#" ng-click="downloadKernel('csv')">CSV</a></li>
+      </ul>
+<!--<button class="btn btn-default btn-xs" ng-click="showFilter = !showFilter"><span class="glyphicon glyphicon-plus"></span></button>-->
     </div>
   </div>
   <div class="table table-responsive logTable">
